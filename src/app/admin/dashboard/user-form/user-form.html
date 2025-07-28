@@ -1,0 +1,49 @@
+  <!-- Add/Edit User section -->
+  <div class="user-form-container">
+      <h4>Add/Edit User</h4>
+
+      <form (ngSubmit)="onSaveUser($event)">
+        <div class="form-row">
+          <mat-form-field class="form-field">
+              <mat-label>Username</mat-label>
+              <input matInput placeholder="Enter username" name = "username">
+          </mat-form-field>
+
+          <mat-form-field class="form-field">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" placeholder="Enter email" name = "email">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field class="form-field">
+              <mat-label>First Name</mat-label>
+              <input matInput placeholder="Enter first name" name = firstName>
+          </mat-form-field>
+
+          <mat-form-field class="form-field">
+              <mat-label>Last Name</mat-label>
+              <input matInput placeholder="Enter last name" name = "lastName">
+          </mat-form-field>
+        </div>
+          
+        <div class="form-row">
+          <mat-form-field class="form-field">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" placeholder="Enter password" name = "password">
+          </mat-form-field>
+
+          <mat-form-field class="form-field">
+              <mat-label>Confirm Password</mat-label>
+              <input matInput type="password" placeholder="Confirm password" name = "confirmPassword">
+          </mat-form-field>
+        </div>
+           <!-- Buttons -->
+   <div class="button-group">
+    <!-- temporar am facut butonul 'save-user' in 
+     type="button" (inainte era type="submit") -->
+       <button mat-raised-button class="save-user" type="button">Save User</button>
+       <button mat-button class="cancel-btn" type="button">Cancel</button>
+   </div>
+      </form>
+  </div>

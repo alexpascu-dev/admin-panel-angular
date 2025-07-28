@@ -1,0 +1,117 @@
+/* Card efect pentru User Management */
+.user-management-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(79,125,215,0.12);
+    padding: 2rem;
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.status-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.status-select:focus {
+  border-color: #4f7dd7;
+  box-shadow: 0 0 4px rgba(79, 125, 215, 0.4);
+}
+
+
+/* Tabel Material: spațiere și border */
+table.mat-table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+}
+
+/* Header tabel */
+.mat-header-row {
+    background: #f5f7fa;
+    font-weight: 600;
+}
+
+/* Celule tabel */
+.mat-cell, .mat-header-cell {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+/* Subtitlu cu fundal albastru */
+h2 {
+    background: #4F7DD7;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Email admin */
+.admin-email {
+    color: rgb(210, 210, 210);
+    font-size: 0.95rem;
+    font-weight: 400;
+    margin-left: 2rem;
+}
+
+.users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+/* Titlu Users Management */
+.users-header h3 {
+    margin: 0
+}
+
+button.add-user[mat-raised-button] {
+    background-color: #4caf50;
+    color: #fff;
+    margin-bottom: 0;
+    margin-right: 0;
+    float: none;
+}
+
+.status {
+    font-weight: 600;
+}
+
+.status-active {
+    color: #43a047;
+}
+
+.status-inactive {
+    color: #e53935;
+}
+
+button.edit-btn[mat-raised-button] {
+    background-color: #1976d2;
+    color: #fff;
+    margin-right : 0.5rem;
+}
+    
+button.delete-btn[mat-raised-button] {
+    background-color: #e53935;
+    color: #fff;
+}

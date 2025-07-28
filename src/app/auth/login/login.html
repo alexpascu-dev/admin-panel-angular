@@ -1,0 +1,38 @@
+<div class="login-container">
+    <div class="login-box">
+        <p class="login-title">Login Page</p>
+
+        <form class="login-form" [formGroup]="loginForm">
+            <input 
+                type="text"
+                placeholder="Enter username"
+                formControlName="username"
+                >
+                @if (username?.invalid && (username?.dirty || username?.touched)) {
+                    <span>
+                        Username is required.
+                    </span>
+                }
+                <input 
+                    type="password"
+                    placeholder="Enter password"
+                    formControlName="password"
+                />
+                @if (password?.invalid && (password?.dirty || password?.touched)) {
+                    <span>
+                        Password is required.
+                    </span>
+                }
+
+                <button mat-raised-button 
+                class="login-btn"
+                type="submit"
+                [disabled]="!loginForm.valid"
+                (click)="loginBtn()"
+                >
+
+                Login
+            </button>
+        </form>
+    </div>
+</div>

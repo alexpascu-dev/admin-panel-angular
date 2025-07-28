@@ -1,0 +1,13 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #4F7DD7;
+  font-weight: bold;
+  color: white;
+}
+
+.admin-info span {
+  margin-right: 10px;
+}
