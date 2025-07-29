@@ -10,6 +10,6 @@ export class DashboardDataService {
   private http = inject(HttpClient);
 
   getUsers(): Observable<UserApi[]> {
-    return this.http.get<UserApi[]>('https://jsonplaceholder.typicode.com/users');
+    return this.http.get<UserApi[]>('http://localhost:5062/api/users');
   }
 }

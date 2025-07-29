@@ -1,4 +1,4 @@
-import { Component, NgModule, signal, OnInit } from '@angular/core';
+import { Component, NgModule, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,8 @@ import { DashboardDataService } from './dashboard-data.service';
   selector: 'app-dashboard',
   imports: [CommonModule, MatTableModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule, App, Header, UserForm],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl: './dashboard.css',
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 
 export class Dashboard implements OnInit {
@@ -58,16 +59,14 @@ export class Dashboard implements OnInit {
     this.loadUsers()
   }
 
-  loadUsers() {
+    loadUsers() {
     this.dataService.getUsers().subscribe(usersApi => {
-      const transformedUsers = usersApi.slice(0,4).map(userApi => {
-        const [firstName, ...remainder] = userApi.name.split(' ');
-        const lastName = remainder.join(' ') || ('');
+      const transformedUsers = usersApi.slice(0,5).map(userApi => {
         return {
-          id: userApi.id,
-          username: userApi.username.toLowerCase(),
-          firstName: firstName,
-          lastName: lastName,
+          id: userApi.userId,
+          username: userApi.userName.toLowerCase(),
+          firstName: userApi.firstName,
+          lastName: userApi.lastName,
           email: userApi.email,
           status: Math.random() < 0.5
         };
@@ -94,6 +93,7 @@ export class Dashboard implements OnInit {
       }
   }
 
+  // Need to work on editUser
   editUser(user: User) {
     console.log('Edit user:', user);
   }

@@ -1,6 +1,8 @@
 export interface UserApi {
-    id: number,
-    name: string,
-    username: string,
+    userId: number,
+    userName: string,
+    firstName: string,
+    lastName: string,
     email: string,
+    status: boolean,
 }

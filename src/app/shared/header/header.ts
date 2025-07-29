@@ -23,31 +23,37 @@ export class Header implements OnInit {
     this.adminEmail();
   }
 
-  logoutBtn() {
+  title = signal('🛠 Admin Panel');
+  admin_email = signal('');
+  
+  adminEmail() {
+    this.dataService.getUsers().subscribe({
+
+      next: users => {
+      if (users[0] !== null && users[0].email !== null) {
+        this.admin_email.set(users[0]?.email);
+      }
+      else {
+        this.admin_email.set('backup@email.com');
+      }
+    },
+
+    error: err => {
+      console.error('API error: ', err);
+      this.admin_email.set('backup@email.com');
+    },
+
+    complete: () => {
+      console.log('Request finalized without errors.')
+    } 
+  });
+  }
+
+    logoutBtn() {
     this.auth.logout();
     this.router.navigate(['/auth/login']);
     this.snackbar.open('You have been logged out.', 'Close', {
       duration: 2000
     });
   }
-
-  title = signal('🛠 Admin Panel');
-  admin_email = signal('');
-
-  adminEmail() {
-    this.dataService.getUsers().subscribe(users => {
-      this.admin_email.set(users[2]?.email || 'backup@email.com');
-    });
-  }
-  
-  // adminEmail() {
-  //   this.dataService.getUsers().subscribe(users => {
-  //     if (users[2] !== null && users[2].email !== null) {
-  //       this.admin_email.set(users[2]?.email);
-  //     }
-  //     else {
-  //       this.admin_email.set('backup@email.com');
-  //     }
-  //   });
-  // }
 }
