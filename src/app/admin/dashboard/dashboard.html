@@ -21,6 +21,7 @@
     <button mat-raised-button class ="add-user" (click)="addUser()">+ Add New User</button>
   </div>
 
+  <!-- Table -->
   <table mat-table [dataSource]="visibleUsers" class="mat-elevation-z8">
     <!-- ID Column -->
     <mat-text-column name="id" headerText="ID"></mat-text-column>
@@ -61,6 +62,58 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <app-user-form></app-user-form>
 
+  <!-- Add user Form-->
+  <div class="user-form-container">
+    <h4>Add/Edit User</h4>
+  </div>
+
+  <form #myForm="ngForm">
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput name = "username" placeholder="Enter username" ngModel>
+        <mat-icon matSuffix>account_circle</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput name = "email" placeholder="Enter email" ngModel>
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+    </div>
+
+      <div class="form-row">
+        <mat-form-field class="form-field" appearance="outline">
+        <mat-label>First name</mat-label>
+        <input matInput name = "firstName" placeholder="Enter first name" ngModel>
+        <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input matInput name = "lastName" placeholder="Enter last name" ngModel>
+        <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+    </div>
+
+      <div class="form-row">
+        <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput name = "password" placeholder="Enter password" ngModel>
+        <mat-icon matSuffix>password</mat-icon>
+      </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Confirm password</mat-label>
+        <input matInput name = "confirmPassword" placeholder="Confirm password" ngModel>
+        <mat-icon matSuffix>password</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="button-group">
+      <button mat-raised-button type="submit" class="save-user">Save User</button>
+      <button mat-raised-button type="button" class="cancel-btn">Cancel</button>
+    </div>
+  </form>
 </div>

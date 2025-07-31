@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { UserApi } from '../../../models/user-api.interface';
+import { GetUserDto } from '../../../models/GetUserDto';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class DashboardDataService {
   private http = inject(HttpClient);
 
-  getUsers(): Observable<UserApi[]> {
-    return this.http.get<UserApi[]>('http://localhost:5062/api/users');
+  getUsers(): Observable<GetUserDto[]> {
+    return this.http.get<GetUserDto[]>('http://localhost:5062/api/users');
   }
 }

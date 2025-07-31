@@ -115,3 +115,38 @@ button.delete-btn[mat-raised-button] {
     background-color: #e53935;
     color: #fff;
 }
+
+.user-form-container {
+    margin-top: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Buton Save */
+button.save-user[mat-raised-button] {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* Buton Cancel */
+button.cancel-btn[mat-raised-button] {
+  background-color: #757575;
+  color: #fff;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}

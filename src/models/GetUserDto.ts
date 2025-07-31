@@ -1,6 +1,6 @@
-export interface UserApi {
+export interface GetUserDto {
     userId: number,
-    userName: string,
+    username: string,
     firstName: string,
     lastName: string,
     email: string,
