@@ -1,25 +1,25 @@
-import { Component, NgModule, signal, OnInit, ChangeDetectionStrategy, AfterViewInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, NgModule, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
 import { App } from "../../app";
 import { Header } from "../../shared/header/header";
 import { User } from '../../../models/user.interface';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { inject } from '@angular/core';
 import { DashboardDataService } from './dashboard-data.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { transform } from 'typescript';
+import { UserFormData } from '../../../models/userform.interface';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, MatTableModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatToolbarModule, MatIconModule, MatCardModule, FormsModule, App, Header],
+  imports: [CommonModule, MatTableModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatCardModule, FormsModule, App, Header],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.Default,
@@ -27,15 +27,29 @@ import { transform } from 'typescript';
 
 export class Dashboard implements OnInit {
 
-    displayedColumns: string[] = [
-  'id',
-  'username',
-  'firstName',
-  'lastName',
-  'email',
-  'status',
-  'actions'
+  displayedColumns: string[] = [
+    'id',
+    'username',
+    'firstName',
+    'lastName',
+    'email',
+    'status',
+    'actions'
   ];
+
+  UserFormData = {
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    confirmPassword: ''
+  };
+
+  get UserDataSent() {
+    const { confirmPassword, ... UserDataSent } = this.UserFormData;
+    return UserDataSent;
+  }
 
   private snackBar = inject(MatSnackBar);
   private dataService = inject(DashboardDataService);
@@ -63,14 +77,15 @@ export class Dashboard implements OnInit {
 
     loadUsers() {
     this.dataService.getUsers().subscribe(usersApi => {
-        console.log('DEBUG API:', usersApi); // vezi structura reală
-      const transformedUsers = usersApi.slice(0,5).map(userApi => {
+        console.log('DEBUG API:', usersApi);
+      const transformedUsers = usersApi.slice(0,6).map(userApi => {
         return {
           id: userApi.userId,
           username: userApi.username.toLowerCase(),
           firstName: userApi.firstName,
           lastName: userApi.lastName,
           email: userApi.email,
+          // status: true
           status: Math.random() < 0.5
         };
       });
@@ -119,12 +134,25 @@ export class Dashboard implements OnInit {
     //don't clear edit fields
   
 
-  deleteUser(user: User) {
-    this.users = this.users.filter(u => u.id !== user.id)
-    this.addedUserIds.delete(user.id);
-    this.snackBar.open('User has been deleted', 'Close', {
-      duration: 1000
-    });
+    deleteUser(id: number) {
+      this.dataService.deleteUser(id).subscribe({
+        next: response =>
+        { 
+          console.log('User deleted successfully:', response);
+          this.addedUserIds.delete(id);
+          this.loadUsers(); 
+          this.snackBar.open('User deleted successfully!', 'Close', {
+            duration: 1000
+          });
+        } ,
+        error: error =>
+        {
+          console.log('Error:', error);
+          this.snackBar.open('User could not be deleted', 'Close', {
+            duration: 1000
+          });
+        }
+      });
   }
 
     //return ok
@@ -132,10 +160,25 @@ export class Dashboard implements OnInit {
 
     //return nok
     //popup de eroare
+    
 
-  public createUser(user: User): void {
-    this.allUsers.push(user);
+   createNewUser(form: NgForm) {
+    if (!form.valid) return;
+
+   this.dataService.createUser(this.UserDataSent).subscribe({
+    next: response => 
+      { console.log('User created successfully:', response); 
+      form.resetForm();
+      this.loadUsers();
+    } ,
+    error: error => 
+      { console.error('Error:', error);
+      this.snackBar.open('User could not be created', 'Close', {
+        duration: 1500
+    });
+  }});
   }
+  
     //return ok
     //loadUsers()
 
