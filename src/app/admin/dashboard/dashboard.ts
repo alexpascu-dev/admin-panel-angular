@@ -1,5 +1,5 @@
-import { Component, NgModule, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
+import { Component, NgModule, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { App } from "../../app";
 import { Header } from "../../shared/header/header";
 import { User } from '../../../models/user.interface';
@@ -13,7 +13,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
-import { transform } from 'typescript';
 import { UserFormData } from '../../../models/userform.interface';
 
 @Component({
@@ -27,6 +26,9 @@ import { UserFormData } from '../../../models/userform.interface';
 
 export class Dashboard implements OnInit {
 
+  private snackBar = inject(MatSnackBar);
+  private dataService = inject(DashboardDataService);
+
   displayedColumns: string[] = [
     'id',
     'username',
@@ -38,21 +40,47 @@ export class Dashboard implements OnInit {
   ];
 
   UserFormData = {
+    userId: 0,
     username: '',
     email: '',
     firstName: '',
     lastName: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    isActive: true
   };
 
-  get UserDataSent() {
-    const { confirmPassword, ... UserDataSent } = this.UserFormData;
-    return UserDataSent;
-  }
+  UpdateUserDto = {
+    userId: 0,
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    isActive: true
+  }; 
 
-  private snackBar = inject(MatSnackBar);
-  private dataService = inject(DashboardDataService);
+  @ViewChild('userForm') form!: NgForm;
+  editMode: boolean = false;
+  currentUserId: number | null = null;
+
+  onResetClick(): void {
+    const emptyForm: UserFormData = {
+    userId: 0,
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    confirmPassword: '',
+    isActive: true,
+  };
+
+  this.UserFormData = emptyForm;
+  this.form.resetForm({ ...emptyForm });
+
+  this.editMode = false;
+  this.currentUserId = null;
+  }
 
   users: User[] = [];
   allUsers: User[] = [];
@@ -77,15 +105,13 @@ export class Dashboard implements OnInit {
 
     loadUsers() {
     this.dataService.getUsers().subscribe(usersApi => {
-        console.log('DEBUG API:', usersApi);
-      const transformedUsers = usersApi.slice(0,6).map(userApi => {
+      const transformedUsers = usersApi.map(userApi => {
         return {
           id: userApi.userId,
           username: userApi.username.toLowerCase(),
           firstName: userApi.firstName,
           lastName: userApi.lastName,
           email: userApi.email,
-          // status: true
           status: Math.random() < 0.5
         };
       });
@@ -119,11 +145,6 @@ export class Dashboard implements OnInit {
 
     //else popupError
 
-  
-  // TODO EDIT
-  editUser(user: User) {
-    console.log('Edit user:', user);
-  }
 
     //return ok
     // refresh list with users
@@ -155,33 +176,58 @@ export class Dashboard implements OnInit {
       });
   }
 
-    //return ok
-    //loadUsers()
+  onEditClick(user: User) {
+    this.editMode = true;
 
-    //return nok
-    //popup de eroare
-    
+    this.UserFormData = {
+      userId: user.id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: '',
+      confirmPassword: '',
+      isActive: user.status
+    };
+  }
 
-   createNewUser(form: NgForm) {
+  onUserFormSubmit(form: NgForm) {
     if (!form.valid) return;
 
-   this.dataService.createUser(this.UserDataSent).subscribe({
-    next: response => 
-      { console.log('User created successfully:', response); 
-      form.resetForm();
-      this.loadUsers();
-    } ,
-    error: error => 
-      { console.error('Error:', error);
-      this.snackBar.open('User could not be created', 'Close', {
-        duration: 1500
-    });
-  }});
-  }
-  
-    //return ok
-    //loadUsers()
-
-    //return nok
-    //popup eroare
+    if (this.editMode) {
+      this.UpdateUserDto = {
+        userId: this.UserFormData.userId,
+        username: this.UserFormData.username,
+        email: this.UserFormData.email,
+        firstName: this.UserFormData.firstName,
+        lastName: this.UserFormData.lastName,
+        isActive: this.UserFormData.isActive
+      };      
+        this.dataService.editUser(this.UpdateUserDto).subscribe({
+        next: response => 
+          { console.log('User updated successfully:', response); 
+          this.onResetClick()
+          this.loadUsers();
+        } ,
+        error: error => 
+          { console.error('Error:', error);
+          this.snackBar.open('User could not be updated', 'Close', {
+            duration: 1500
+        });
+      }});          
+      } else {
+      this.dataService.createUser(this.UserFormData).subscribe({
+        next: response => 
+          { console.log('User created successfully:', response);
+          this.onResetClick()
+          this.loadUsers();
+        } ,
+        error: error => 
+          { console.error('Error:', error);
+          this.snackBar.open('User could not be created', 'Close', {
+            duration: 1500
+        });
+      }});
+      }
+    }
 }

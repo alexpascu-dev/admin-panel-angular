@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { GetUserDto } from '../../../models/GetUserDto';
 import { catchError, Observable } from 'rxjs';
 import { AddUserDto } from '../../../models/AddUserDto';
+import { UpdateUserDto } from '../../../models/UpdateUserDto';
+import { User } from '../../../models/user.interface';
 
 
 @Injectable({
@@ -21,13 +23,18 @@ export class DashboardDataService {
 
   // POST METHOD
   createUser(UserDataSent: AddUserDto): Observable<AddUserDto> {
-    return this.http.post<AddUserDto>(this.apiUrl, UserDataSent)
+    return this.http.post<AddUserDto>(this.apiUrl, UserDataSent);
+  }
+
+  //PUT METHOD
+  editUser(user: UpdateUserDto): Observable<UpdateUserDto> {
+    return this.http.put<UpdateUserDto>(this.apiUrl, user);
   }
 
   // DELETE METHOD
   deleteUser(id: number): Observable<unknown> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete(url);
-  }
+  }  
 
 }
