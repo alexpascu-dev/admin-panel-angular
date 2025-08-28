@@ -1,38 +1,39 @@
 <div class="login-container">
     <div class="login-box">
-        <p class="login-title">Login Page</p>
+        <p class="login-title">User Login</p>
 
-        <form class="login-form" [formGroup]="loginForm">
+        <form class="login-form" #loginForm="ngForm" (ngSubmit)="loginBtn(loginForm)" novalidate>
             <input 
                 type="text"
-                placeholder="Enter username"
-                formControlName="username"
-                >
-                @if (username?.invalid && (username?.dirty || username?.touched)) {
-                    <span>
-                        Username is required.
-                    </span>
-                }
-                <input 
-                    type="password"
-                    placeholder="Enter password"
-                    formControlName="password"
-                />
-                @if (password?.invalid && (password?.dirty || password?.touched)) {
-                    <span>
-                        Password is required.
-                    </span>
-                }
+                name="username"
+                [(ngModel)]="LoginData.username"
+                #username="ngModel"
+                required
+                placeholder="Enter username"                
+            />
+                <div *ngIf="username.invalid && (username.dirty || username.touched)" class="error-message">
+                    Username is required.
+                </div>
+
+            <input 
+                type="password"
+                name="password"
+                [(ngModel)]="LoginData.password"
+                #password="ngModel"
+                required
+                placeholder="Enter password"
+            />
+                <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+                    Password is required.
+                </div>
 
                 <button mat-raised-button 
                 class="login-btn"
                 type="submit"
                 [disabled]="!loginForm.valid"
-                (click)="loginBtn()"
                 >
-
                 Login
-            </button>
+                </button>
         </form>
     </div>
 </div>

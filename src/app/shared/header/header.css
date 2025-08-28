@@ -2,12 +2,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  background-color: #4F7DD7;
-  font-weight: bold;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #4F7DD7, #6b9ded);
+  font-weight: 600;
   color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(79,125,215,0.12);
 }
 
 .admin-info span {
-  margin-right: 10px;
+  margin-right: 16px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.admin-info span:last-child {
+  margin-right: 0;
 }

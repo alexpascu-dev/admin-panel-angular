@@ -1,9 +1,9 @@
-
- export interface User {
-  readonly id: number,
-  username: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  status: boolean
- }
+export interface User {
+    readonly userId: number,
+    username: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    role: string,
+    isActive: boolean
+}

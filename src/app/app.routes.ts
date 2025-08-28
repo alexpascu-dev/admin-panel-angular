@@ -4,34 +4,18 @@ import { Login } from './auth/login/login';
 import { authGuard } from './auth/auth-guard';
 
 export const routes: Routes = [
-    // {
-    //    path:'',
-    //    redirectTo: '/auth/login',
-    //    pathMatch: 'full'
-    // },
-    // {
-    //     path:'auth/login',
-    //     component: Login
-    // },
-    // {
-    //     path: 'admin/dashboard',
-    //     component: Dashboard,
-    //     canActivate: [authGuard]
-    // }
-
-
-    // FOR TESTING PURPOSES
-        {
+    {
        path:'',
-       redirectTo: '/admin/dashboard',
+       redirectTo: 'auth/login',
        pathMatch: 'full'
     },
     {
-        path:'admin/dashboard',
-        component: Dashboard
+        path:'auth/login',
+        component: Login
     },
     {
-        path: 'auth/login',
-        component: Login,
+        path: 'admin/dashboard',
+        component: Dashboard,
+        canActivate: [authGuard]
     }
 ];

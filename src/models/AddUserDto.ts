@@ -3,5 +3,7 @@ export interface AddUserDto {
     firstName: string;
     lastName: string;
     email: string;
+    role: string;
+    isActive: boolean;
     password: string;
 }

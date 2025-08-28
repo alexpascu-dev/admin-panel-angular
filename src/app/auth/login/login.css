@@ -1,22 +1,22 @@
-/* Centrare totală a containerului */
+/* Login container */
 .login-container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #eef1f5;
+  background: linear-gradient(135deg, #e9f0fa, #eef1f5);
 }
 
-/* Chenar alb */
+/* Login box */
 .login-box {
   background-color: #fff;
-  padding: 30px 40px;
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  padding: 32px 42px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   width: 320px;
 }
 
-/* Titlu formular */
+/* Title */
 .login-title {
   font-size: 22px;
   font-weight: 600;
@@ -25,39 +25,39 @@
   color: #333;
 }
 
-/* Formular stilizat vertical */
+/* Login form */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Inputuri simple */
 .login-form input {
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.2s;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.25s ease;
 }
 
 .login-form input:focus {
   border-color: #1976d2;
+  box-shadow: 0 0 6px rgba(25, 118, 210, 0.3);
   outline: none;
 }
 
-/* Mesaje de eroare */
-.login-form span {
+/* Error messages */
+.error-message {
   font-size: 12px;
   color: #e53935;
   margin-bottom: 4px;
   margin-left: 2px;
 }
 
-/* Buton login */
+/* Login button */
 button.login-btn[mat-raised-button] {
   margin-top: 12px;
-  width: 70%;
+  width: 55%;
   margin-left: auto;
   margin-right: auto;
   cursor: pointer;

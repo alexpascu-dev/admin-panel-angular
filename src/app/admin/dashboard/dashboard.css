@@ -1,119 +1,87 @@
 /* Card efect pentru User Management */
 .user-management-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(79,125,215,0.12);
-    padding: 2rem;
-    margin: 2rem 0;
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(79,125,215,0.12);
+  padding: 2rem;
+  margin: 2rem 0;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.status-select {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  background-color: #fff;
-  color: #333;
+/* TABLE */
+.mat-elevation-z8 table[mat-table],
+.user-management-card table[mat-table],
+.mat-elevation-z8 .mat-table,
+.user-management-card .mat-table,
+.mat-elevation-z8 .mat-mdc-table,
+.user-management-card .mat-mdc-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+}
+
+/* HEADER ROW */
+.mat-elevation-z8 :where(.mat-header-row, .mat-mdc-header-row),
+.user-management-card :where(.mat-header-row, .mat-mdc-header-row) {
+  background: #e7ebf3 !important;
+  font-weight: 550;
+    font-size: small;
+
+}
+
+/* Hover over cells */
+.mat-elevation-z8 :where(.mat-row, .mat-mdc-row):hover {
+  background-color: #f2f4f9;
   cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s ease-in-out;
 }
 
-.status-select:focus {
-  border-color: #4f7dd7;
-  box-shadow: 0 0 4px rgba(79, 125, 215, 0.4);
-}
-
-
-/* Tabel Material: spațiere și border */
-table.mat-table {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(79,125,215,0.08);
-}
-
-/* Header tabel */
-.mat-header-row {
-    background: #f5f7fa;
-    font-weight: 600;
-}
-
-/* Celule tabel */
-.mat-cell, .mat-header-cell {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-}
-
-/* Subtitlu cu fundal albastru */
+/* Subtitle with blue background */
 h2 {
-    background: #4F7DD7;
-    color: #fff;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1.3rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(79,125,215,0.08);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: linear-gradient(135deg, #4F7DD7, #6b9ded);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Email admin */
-.admin-email {
-    color: rgb(210, 210, 210);
-    font-size: 0.95rem;
-    font-weight: 400;
-    margin-left: 2rem;
-}
+/* .users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+} */
 
-.users-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 /* Titlu Users Management */
-.users-header h3 {
+/* .users-header h3 {
     margin: 0
-}
-
-button.add-user[mat-raised-button] {
-    background-color: #4caf50;
-    color: #fff;
-    margin-bottom: 0;
-    margin-right: 0;
-    float: none;
-}
+} */
 
 .status {
-    font-weight: 600;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;  
 }
 
 .status-active {
-    color: #43a047;
+  color: #2e7d32;
+  background: #e8f5e9;
 }
 
 .status-inactive {
-    color: #e53935;
-}
-
-button.edit-btn[mat-raised-button] {
-    background-color: #1976d2;
-    color: #fff;
-    margin-right : 0.5rem;
-}
-    
-button.delete-btn[mat-raised-button] {
-    background-color: #e53935;
-    color: #fff;
+  color: #c62828;
+  background: #ffebee;
 }
 
 .user-form-container {
@@ -133,9 +101,37 @@ button.delete-btn[mat-raised-button] {
   min-width: 280px;
 }
 
+/* Buttons */
+button.add-user[mat-raised-button] {
+    background-color: #4caf50;
+    color: #fff;
+    margin-bottom: 0;
+    margin-right: 0;
+    float: none;
+}
+
+button[mat-raised-button] {
+  transition: background-color 0.3s ease, transform 0.15s ease;
+}
+
+button[mat-raised-button]:hover {
+  transform: translateY(-2px);
+}
+
+button.edit-btn[mat-raised-button] {
+    background-color: #1976d2;
+    color: #fff;
+    margin-right : 0.5rem;
+}
+    
+button.delete-btn[mat-raised-button] {
+    background-color: #e53935;
+    color: #fff;
+}
+
 .button-group {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -144,7 +140,6 @@ button.save-user[mat-raised-button] {
   background-color: #4caf50;
   color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 button.save-user[mat-raised-button]:hover:not(:disabled) {
@@ -168,11 +163,12 @@ button.reset-form-btn[mat-raised-button]:hover {
   background-color: #93bde2;
 }
 
+/* Alerts */
 .alert {
-    color: #a94442;
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 5px;
+  color: #a94442;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+   padding: 5px;
+  margin-top: 5px;
 }

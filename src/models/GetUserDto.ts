@@ -4,5 +4,6 @@ export interface GetUserDto {
     firstName: string,
     lastName: string,
     email: string,
-    status: boolean,
+    role: string,
+    isActive: boolean,
 }

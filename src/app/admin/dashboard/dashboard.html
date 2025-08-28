@@ -4,47 +4,68 @@
   <h2>User Management System
     <div class="row">
       <div class="col-sm-2">
-        <select 
-        class="status-select"
-        [(ngModel)]="statusFilter"
-        >
-          <option value="0">All</option>
-          <option value="1">Active</option>
-          <option value="2">Inactive</option>
-        </select>
       </div>
     </div>
   </h2>
 
-  <div class="users-header">
-    <h3>Users Management</h3>
-    <button mat-raised-button class ="add-user" (click)="addUser()">+ Add New User</button>
-  </div>
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input 
+    #filterInput
+    matInput 
+    [disabled]="(!canSeeForm)"
+    (keyup)="canSeeForm && applyFilter($event)" 
+    placeholder="Ex. Alex">
+</mat-form-field>
 
-  <!-- Table -->
-  <table mat-table [dataSource]="visibleUsers" class="mat-elevation-z8">
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- COLUMNS -->
+     
     <!-- ID Column -->
-    <mat-text-column name="id" headerText="ID"></mat-text-column>
+    <ng-container matColumnDef="userId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let user"> {{user.userId}} </td>
+    </ng-container>
 
-      <!-- Username Column -->
-    <mat-text-column name="username"></mat-text-column>
+    <!-- Username Column -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+    </ng-container>
 
     <!-- First Name Column -->
-    <mat-text-column name="firstName"></mat-text-column>
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+      <td mat-cell *matCellDef="let user"> {{user.firstName}} </td>
+    </ng-container>
 
     <!-- Last Name Column -->
-    <mat-text-column name="lastName"></mat-text-column>
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+      <td mat-cell *matCellDef="let user"> {{user.lastName}} </td>
+    </ng-container>
 
     <!-- Email Column -->
-    <mat-text-column name="email"></mat-text-column>
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+      <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+      <td mat-cell *matCellDef="let user"> {{user.role}} </td>
+    </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <td mat-cell *matCellDef="let user">
-        <span *ngIf="user.status === true" class="status-active">Active
+        <span *ngIf="user.isActive=== true" class="status-active">Active
         </span>
-        <span *ngIf="user.status === false" class="status-inactive">Inactive
+        <span *ngIf="user.isActive === false" class="status-inactive">Inactive
         </span>
       </td>
     </ng-container>
@@ -53,17 +74,41 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let user">
-          <button mat-raised-button class="edit-btn" (click)="onEditClick(user)">Edit</button>
-          <button mat-raised-button class="delete-btn" (click)="deleteUser(user.id)">Delete</button>
+        <!-- Edit Btn -->
+          <button
+          mat-raised-button 
+          class="edit-btn" 
+          (click)="onEditClick(user)"
+          >Edit
+        </button>
+        <!-- Delete Btn -->
+          <button 
+          *ngIf="auth.hasRole(Roles.Admin)" 
+          mat-raised-button class="delete-btn" 
+          (click)="deleteUser(user.userId)"
+          >Delete
+        </button>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">
+          No data matching the filter "{{filterInput.value}}"
+      </td>
+    </tr>
   </table>
 
+    @if (canSeeForm) {
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    }
+</div>
 
   <!-- Add user Form-->
+  @if (auth.hasRole(Roles.Admin) || editMode) {
   <div class="user-form-container">
     <h4>Add/Edit User</h4>
   </div>
@@ -82,7 +127,7 @@
           name = "username"
           [(ngModel)]="UserFormData.username"
           #username="ngModel"
-          required
+          [required]="!editMode"
           minlength="3"
           placeholder="Enter username" 
         >
@@ -106,7 +151,7 @@
           name = "email"
           [(ngModel)]="UserFormData.email"
           #email="ngModel"
-          required
+          [required]="!editMode"
           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           placeholder="Enter email" 
         >
@@ -132,7 +177,7 @@
           name = "firstName" 
           [(ngModel)]="UserFormData.firstName"
           #firstName="ngModel"
-          required
+          [required]="!editMode"
           minlength="2"
           placeholder="Enter first name" 
         >
@@ -156,7 +201,7 @@
          name = "lastName" 
          [(ngModel)]="UserFormData.lastName"
          #lastName="ngModel"
-         required
+         [required]="!editMode"
          minlength="2"
          placeholder="Enter last name"
          >
@@ -172,9 +217,41 @@
         </mat-form-field>
     </div>
 
-      <!-- PASSWORD FIELD -->
+        <!-- STATUS FIELD -->
       <div class="form-row">
-        <mat-form-field *ngIf="!editMode" class="form-field" appearance="outline">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Select status</mat-label>
+          <mat-select 
+          name="isActive"
+          [(ngModel)]="UserFormData.isActive"
+          [required]="!editMode"
+          >
+              <!-- <mat-option [value]=null disabled>-- Select status --</mat-option> -->
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- ROLE FIELD -->
+        @if (canChangeRole) {
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Select role</mat-label>
+          <mat-select 
+          name="role"
+          [(ngModel)]="UserFormData.role"
+          [required]="!editMode"
+          >
+              <mat-option [value]=null disabled>-- Select role --</mat-option>
+              <mat-option *ngFor="let role of roles" [value]="role"> {{ role }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      }
+      </div>
+  
+      <!-- PASSWORD FIELD -->
+      @if (canChangePassword) {
+      <div class="form-row">
+        <mat-form-field class="form-field" appearance="outline">
         <mat-label>Password</mat-label>
         <input 
           matInput
@@ -182,7 +259,7 @@
           name = "password"
           [(ngModel)]="UserFormData.password"
           #password="ngModel"
-          required
+          [required]="!editMode"
           minlength="5"
           placeholder="Enter password"
         >
@@ -198,15 +275,15 @@
       </mat-form-field>
 
         <!-- CONFIRM PASSWORD FIELD -->
-        <mat-form-field *ngIf="!editMode" class="form-field" appearance="outline">
+        <mat-form-field class="form-field" appearance="outline">
         <mat-label>Confirm password</mat-label>
         <input
           matInput 
-          type="password" 
+          type="password"
           name = "confirmPassword"
           [(ngModel)]="UserFormData.confirmPassword"
           #confirmPassword="ngModel"
-          required
+          [required]="!editMode"
           minlength="5"
           placeholder="Confirm password"
         >
@@ -226,16 +303,30 @@
         <mat-icon matSuffix>password</mat-icon>
       </mat-form-field>
     </div>
+  }
 
     <div class="button-group">
-        <button 
+      <!-- Admin -->
+        <button
+          *ngIf="auth.hasRole(Roles.Admin)"
           mat-raised-button 
           class="save-user"
           type="submit"
-          [disabled]="!userForm.valid"
+          [disabled]="!userForm.valid && !editMode"
         >
           {{editMode ? 'Update User' : 'Create User'}}
-      </button>
+        </button>
+
+        <!-- Supervisor -->
+        <button
+          *ngIf="auth.hasRole(Roles.Supervisor)"
+          mat-raised-button 
+          class="save-user"
+          type="submit"
+          [disabled]="!editMode"
+        >
+        Update User
+        </button>      
 
       <button 
         mat-raised-button 
@@ -247,5 +338,5 @@
 
     </div>
   </form>
-
+  }
 </div>

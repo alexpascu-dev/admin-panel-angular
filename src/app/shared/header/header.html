@@ -1,7 +1,7 @@
 <header class="admin-header">
   <div class="title">{{ title() }}</div>
   <div class="admin-info">
-     <span> Admin: {{ admin_email() }} </span>
+     <span> {{ user_role() + ' : ' + user_email() }} </span>
     <button mat-raised-button class="logout-btn" (click)="logoutBtn()">Logout</button>
   </div>
 </header>

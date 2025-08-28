@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { GetUserDto } from '../../../models/GetUserDto';
-import { catchError, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AddUserDto } from '../../../models/AddUserDto';
 import { UpdateUserDto } from '../../../models/UpdateUserDto';
-import { User } from '../../../models/user.interface';
+import { GetUserRolesDto } from '../../../models/GetUserRolesDto';
+import { ChangePasswordDto } from '../../../models/ChangePasswordDto';
 
 
 @Injectable({
@@ -16,25 +17,44 @@ export class DashboardDataService {
   private http = inject(HttpClient);
 
 
-  // GET METHOD
+  // GET ALL USERS
   getUsers(): Observable<GetUserDto[]> {
     return this.http.get<GetUserDto[]>(this.apiUrl);
   }
 
+  // GET USER INFO FROM TOKEN
+  getMe(): Observable<GetUserDto> {
+    const url = `${this.apiUrl}/me`;
+    return this.http.get<GetUserDto>(url);
+  }
+
+  // GET ROLES API
+  getRoles(): Observable<GetUserRolesDto[]> {
+    const url = `${this.apiUrl}/roles`;
+    return this.http.get<GetUserRolesDto[]>(url);
+  }
+
   // POST METHOD
   createUser(UserDataSent: AddUserDto): Observable<AddUserDto> {
-    return this.http.post<AddUserDto>(this.apiUrl, UserDataSent);
+    const url = `${this.apiUrl}/register`
+    return this.http.post<AddUserDto>(url, UserDataSent);
   }
 
   //PUT METHOD
   editUser(user: UpdateUserDto): Observable<UpdateUserDto> {
-    return this.http.put<UpdateUserDto>(this.apiUrl, user);
+    const url = `${this.apiUrl}/update`
+    return this.http.put<UpdateUserDto>(url, user);
+  }
+
+  //CHANGE PASSWORD
+  changePassword(userDataSent: ChangePasswordDto) {
+    const url = `${this.apiUrl}/update/change-password`
+    return this.http.put<ChangePasswordDto>(url, userDataSent);
   }
 
   // DELETE METHOD
-  deleteUser(id: number): Observable<unknown> {
-    const url = `${this.apiUrl}/${id}`;
+  deleteUser(userId: number): Observable<unknown> {
+    const url = `${this.apiUrl}/${userId}`;
     return this.http.delete(url);
-  }  
-
+  }
 }
