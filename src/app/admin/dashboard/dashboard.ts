@@ -32,7 +32,6 @@ import { Roles } from '../../constants/constants';
 
 export class Dashboard implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
-    // 'userId',
     'username',
     'firstName',
     'lastName',

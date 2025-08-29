@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class Auth {
 
   private readonly JWT_TOKEN = 'JWT_TOKEN';
-  private readonly API_URL = 'http://localhost:5062/api/auth/login';
+  private readonly API_URL = 'http://209.38.254.238/api/auth/login';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
   private router = inject(Router);

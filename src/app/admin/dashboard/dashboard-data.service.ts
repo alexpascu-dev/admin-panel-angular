@@ -12,7 +12,7 @@ import { ChangePasswordDto } from '../../../models/ChangePasswordDto';
   providedIn: 'root'
 })
 export class DashboardDataService {
-  private apiUrl = 'http://localhost:5062/api/users';
+  private apiUrl = 'http://209.38.254.238/api/users';
 
   private http = inject(HttpClient);
 
