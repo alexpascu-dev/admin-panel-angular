@@ -103,9 +103,13 @@
   </table>
 </div> 
 
-    @if (canSeeForm) {
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
-    }
+  @if (canSeeForm) {
+    <mat-paginator 
+      [length]="total"
+      [pageSizeOptions]="[5, 10, 25, 100]" 
+      aria-label="Select page of users">
+    </mat-paginator>
+  }
 
   <!-- Add user Form-->
   @if (auth.hasRole(Roles.Admin) || editMode) {

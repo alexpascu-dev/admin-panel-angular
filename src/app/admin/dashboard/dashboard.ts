@@ -18,6 +18,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { UserFormData } from '../../../models/userform.interface';
 import { GetUserRolesDto } from '../../../models/GetUserRolesDto';
 import { ChangePasswordDto } from '../../../models/ChangePasswordDto';
+import { PagedUsersQuery } from '../../../models/PagedUsersQuery';
 import { Auth } from '../../auth/auth';
 import { Roles } from '../../constants/constants';
 
@@ -76,15 +77,34 @@ export class Dashboard implements OnInit, AfterViewInit {
   users: User[] = [];  
 
   dataSource = new MatTableDataSource<User>();
+  private search = '';
+  private defaultPageSize = 10;
+  total = 0;
 
   @ViewChild('userForm') form!: NgForm;
+  @ViewChild('filterInput') filterInput!: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  // }
+
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }  
+    // Sorting Changes => reset to first page and reload users
+    this.sort.sortChange.subscribe(() => {
+      this.paginator.firstPage();
+      this.loadUsers();
+  });
+
+    // When page changes => load users
+    this.paginator.page.subscribe(() => this.loadUsers());
+
+    // First load
+    this.paginator.pageSize = this.defaultPageSize;
+    this.loadUsers();
+}
 
   editMode: boolean = false;
 
@@ -131,9 +151,23 @@ export class Dashboard implements OnInit, AfterViewInit {
   
     loadUsers() {
       if (this.canSeeForm) {
-    this.dataService.getUsers().subscribe(usersApi => {
-      const transformedUsers = usersApi.map(userApi => {
-        return {
+      // All users + sort/filter/search
+      const pageIndex = this.paginator? this.paginator.pageIndex: 0;
+      const pageSize = this.paginator? this.paginator.pageSize: this.defaultPageSize;
+
+      const sortBy = this.sort?.active || 'createdDate'
+      const sortDir = this.sort?.direction as 'asc' | 'desc' || 'desc';
+
+      const query: PagedUsersQuery = {
+        pageIndex,
+        pageSize,
+        sortBy,
+        sortDir,
+        search: this.search?.trim() || null
+      };
+
+    this.dataService.getUsers(query).subscribe(usersApi => {
+      const transformedUsers = usersApi.items.map(userApi => ({
           userId: userApi.userId,
           username: userApi.username.toLowerCase(),
           firstName: userApi.firstName,
@@ -141,12 +175,19 @@ export class Dashboard implements OnInit, AfterViewInit {
           email: userApi.email,
           role: userApi.role,
           isActive: userApi.isActive
-        };
-      });
+    }));
+
       this.users = [...transformedUsers];
       this.dataSource.data = transformedUsers;
+
+      this.total = usersApi.total;
+      if (this.paginator) {
+        this.paginator.length = usersApi.total;
+      }
     });
+
   } else {
+    // Single user
     this.dataService.getMe().subscribe(userApi => {
       const userInfo = {
         userId: userApi.userId,
@@ -159,6 +200,7 @@ export class Dashboard implements OnInit, AfterViewInit {
       };
       this.users = [userInfo];
       this.dataSource.data = [userInfo];
+      this.total = 1;
     });
   }
 }
@@ -176,15 +218,11 @@ export class Dashboard implements OnInit, AfterViewInit {
   }
 
   applyFilter(searchFilter: Event) {
-    if (!this.canSeeForm) {
-      return;
-    }
-    const filterValue = (searchFilter.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    if (!this.canSeeForm) return;
+    const value = (searchFilter.target as HTMLInputElement).value ?? '';
+    this.search = value.trim();
+    this.paginator.firstPage();
+    this.loadUsers();
   }
 
     deleteUser(userId: number) {

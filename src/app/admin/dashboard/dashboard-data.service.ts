@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { GetUserDto } from '../../../models/GetUserDto';
 import { Observable } from 'rxjs';
@@ -6,6 +6,8 @@ import { AddUserDto } from '../../../models/AddUserDto';
 import { UpdateUserDto } from '../../../models/UpdateUserDto';
 import { GetUserRolesDto } from '../../../models/GetUserRolesDto';
 import { ChangePasswordDto } from '../../../models/ChangePasswordDto';
+import { PagedUsersQuery } from '../../../models/PagedUsersQuery';
+import { PagedResult } from '../../../models/PagedResult';
 
 
 @Injectable({
@@ -18,8 +20,22 @@ export class DashboardDataService {
 
 
   // GET ALL USERS
-  getUsers(): Observable<GetUserDto[]> {
-    return this.http.get<GetUserDto[]>(this.apiUrl);
+  // getUsers(): Observable<GetUserDto[]> {
+  //   return this.http.get<GetUserDto[]>(this.apiUrl);
+  // }
+
+  getUsers(query: PagedUsersQuery): Observable<PagedResult<GetUserDto>> {
+    const url = `${this.apiUrl}/all-users`
+
+    let params = new HttpParams()
+      .set('pageIndex', query.pageIndex)
+      .set('pageSize', query.pageSize);
+
+    if (query.sortBy) params = params.set('sortBy', query.sortBy);
+    if (query.sortDir) params = params.set('sortDir', query.sortDir || 'asc');
+    if (query.search) params = params.set('search', query.search!.trim());
+
+    return this.http.get<PagedResult<GetUserDto>>(url, { params })
   }
 
   // GET USER INFO FROM TOKEN
