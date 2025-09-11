@@ -9,10 +9,9 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Auth {
-
   private readonly JWT_TOKEN = 'JWT_TOKEN';
   private readonly API_URL = 'http://209.38.254.238/api/auth/login';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
@@ -28,17 +27,16 @@ export class Auth {
   }
 
   login(user: LoginDto): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(this.API_URL, user).pipe(
-      tap((response)=> this.doLoginUser(response))
-    )
+    return this.http
+      .post<LoginResponseDto>(this.API_URL, user)
+      .pipe(tap((response) => this.doLoginUser(response)));
   }
 
   private doLoginUser(response: LoginResponseDto) {
-
     this.storeJwtToken(response.token);
     this.isAuthenticatedSubject.next(true);
   }
-  
+
   private storeJwtToken(jwt: string) {
     localStorage.setItem(this.JWT_TOKEN, jwt);
   }
@@ -47,6 +45,11 @@ export class Auth {
     localStorage.removeItem(this.JWT_TOKEN);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/']);
+  }
+
+  // Expose authentication state as observable
+  getAuthenticationState(): Observable<boolean> {
+    return this.isAuthenticatedSubject.asObservable();
   }
 
   getToken(): string | null {
@@ -65,9 +68,8 @@ export class Auth {
       if (!decoded || !decoded.exp) return true;
       const expirationDate = decoded.exp * 1000;
       const now = new Date().getTime();
-      return expirationDate < now;    
-    }
-    catch (error) {
+      return expirationDate < now;
+    } catch (error) {
       console.warn('Token decoding failed:', error);
       return true;
     }
@@ -75,10 +77,12 @@ export class Auth {
 
   checkAndLogoutIfExpired() {
     const token = this.getToken();
-    if ((!token) || this.isTokenExpired(token)) {
-      this.logout();
+    if (!token || this.isTokenExpired(token)) {
+      localStorage.removeItem(this.JWT_TOKEN);
+      this.isAuthenticatedSubject.next(false);
+      this.router.navigate(['/']);
       this.snackBar.open('Session expired, please log in', 'Close', {
-        duration: 1500
+        duration: 1500,
       });
     }
   }
@@ -89,10 +93,13 @@ export class Auth {
 
     try {
       return jwtDecode<CurrentUserPayload>(token);
-    }
-    catch {
+    } catch {
       return null;
     }
+  }
+
+  getCurrentUsername(): string {
+    return this.getCurrentUser()?.unique_name ?? 'Backup';
   }
 
   getCurrentUserEmail(): string {
@@ -105,7 +112,7 @@ export class Auth {
 
   getRoles(): string[] {
     try {
-      const decoded: any = jwtDecode(this.getToken() || "");
+      const decoded: any = jwtDecode(this.getToken() || '');
       return [].concat(decoded?.role || []);
     } catch {
       return [];
@@ -118,6 +125,6 @@ export class Auth {
 
   hasAnyRole(roles: string[]): boolean {
     const userRoles = this.getRoles();
-    return roles.some(role => userRoles.includes(role)); 
+    return roles.some((role) => userRoles.includes(role));
   }
 }
