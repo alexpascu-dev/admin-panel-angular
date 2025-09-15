@@ -71,7 +71,9 @@ export class UserManagementService {
           isActive: userApi.isActive,
         }));
 
-        context.users = [...transformedUsers];
+        // context.users = [...transformedUsers];
+        context.users.length = 0;
+        context.users.push(...transformedUsers);
         context.dataSource.data = transformedUsers;
         context.total = usersApi.total;
 
@@ -91,7 +93,10 @@ export class UserManagementService {
           role: userApi.role,
           isActive: userApi.isActive,
         };
-        context.users = [userInfo];
+        // context.users = [userInfo];
+        context.users.length = 0;
+        context.users.push(userInfo);
+
         context.dataSource.data = [userInfo];
         context.total = 1;
       });
@@ -101,7 +106,9 @@ export class UserManagementService {
   loadRoles(context: UserManagementContext): void {
     this.dataService.getRoles().subscribe({
       next: (apiRoles: GetUserRolesDto[]) => {
-        context.roles = apiRoles.map((r) => r.role);
+        const rolesArray = apiRoles.map((r) => r.role);
+        context.roles.length = 0;
+        context.roles.push(...rolesArray);
       },
       error: (error) => {
         console.error('Roles could not be loaded', error);

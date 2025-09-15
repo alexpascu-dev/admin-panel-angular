@@ -1,253 +1,258 @@
-  <!-- Add user Form-->
-  @if (auth.hasRole(Roles.Admin) || editMode) {
-    <div class="user-form-container">
-      <h4>Add/Edit User</h4>
+<!-- Add user Form-->
+<!-- @if (auth.hasRole(Roles.Admin) || editMode) { -->
+ @if (auth.hasRole(Roles.Admin) || editMode) {
+  <!-- FORM FIELD-->
+  <form #userForm="ngForm" (ngSubmit)="onUserFormSubmit(userForm)" novalidate>
+    <div class="form-row">
+      <!-- USERNAME FIELD-->
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Username</mat-label>
+        <input
+          matInput
+          type="text"
+          name="username"
+          [(ngModel)]="UserFormData.username"
+          #username="ngModel"
+          [required]="!editMode"
+          minlength="3"
+          placeholder="Enter username"
+        />
+        <div
+          *ngIf="username.invalid && (username.dirty || username.touched)"
+          class="alert"
+        >
+          <div *ngIf="username.errors?.['required']">Username is required.</div>
+          <div *ngIf="username.errors?.['minlength']">
+            Username must be at least 3 characters long.
+          </div>
+        </div>
+        <mat-icon matSuffix>account_circle</mat-icon>
+      </mat-form-field>
+
+      <!-- EMAIL FIELD -->
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          name="email"
+          [(ngModel)]="UserFormData.email"
+          #email="ngModel"
+          [required]="!editMode"
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+          placeholder="Enter email"
+        />
+        <div
+          *ngIf="email.invalid && (email.dirty || email.touched)"
+          class="alert"
+        >
+          <div *ngIf="email.errors?.['required']">Email is required.</div>
+          <div *ngIf="email.errors?.['pattern']">
+            Please enter a valid email address.
+          </div>
+        </div>
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
     </div>
 
-    <!-- FORM FIELD-->
-    <form #userForm="ngForm" (ngSubmit)="onUserFormSubmit(userForm)" novalidate>
-      <div class="form-row">
-        <!-- USERNAME FIELD-->
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Username</mat-label>
-          <input
-            matInput
-            type="text"
-            name="username"
-            [(ngModel)]="UserFormData.username"
-            #username="ngModel"
-            [required]="!editMode"
-            minlength="3"
-            placeholder="Enter username"
-          />
-          <div
-            *ngIf="username.invalid && (username.dirty || username.touched)"
-            class="alert"
-          >
-            <div *ngIf="username.errors?.['required']">
-              Username is required.
-            </div>
-            <div *ngIf="username.errors?.['minlength']">
-              Username must be at least 3 characters long.
-            </div>
+    <!-- FIRST NAME FIELD -->
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>First name</mat-label>
+        <input
+          matInput
+          type="text"
+          name="firstName"
+          [(ngModel)]="UserFormData.firstName"
+          #firstName="ngModel"
+          [required]="!editMode"
+          minlength="2"
+          placeholder="Enter first name"
+        />
+        <div
+          *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+          class="alert"
+        >
+          <div *ngIf="firstName.errors?.['required']">
+            First name is required.
           </div>
-          <mat-icon matSuffix>account_circle</mat-icon>
-        </mat-form-field>
-
-        <!-- EMAIL FIELD -->
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            name="email"
-            [(ngModel)]="UserFormData.email"
-            #email="ngModel"
-            [required]="!editMode"
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-            placeholder="Enter email"
-          />
-          <div
-            *ngIf="email.invalid && (email.dirty || email.touched)"
-            class="alert"
-          >
-            <div *ngIf="email.errors?.['required']">Email is required.</div>
-            <div *ngIf="email.errors?.['pattern']">
-              Please enter a valid email address.
-            </div>
+          <div *ngIf="firstName.errors?.['minlength']">
+            First name must be at least 2 characters long.
           </div>
-          <mat-icon matSuffix>email</mat-icon>
-        </mat-form-field>
-      </div>
+        </div>
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
 
-      <!-- FIRST NAME FIELD -->
-      <div class="form-row">
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>First name</mat-label>
-          <input
-            matInput
-            type="text"
-            name="firstName"
-            [(ngModel)]="UserFormData.firstName"
-            #firstName="ngModel"
-            [required]="!editMode"
-            minlength="2"
-            placeholder="Enter first name"
-          />
-          <div
-            *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
-            class="alert"
-          >
-            <div *ngIf="firstName.errors?.['required']">
-              First name is required.
-            </div>
-            <div *ngIf="firstName.errors?.['minlength']">
-              First name must be at least 2 characters long.
-            </div>
+      <!-- LAST NAME FIELD -->
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input
+          matInput
+          type="text"
+          name="lastName"
+          [(ngModel)]="UserFormData.lastName"
+          #lastName="ngModel"
+          [required]="!editMode"
+          minlength="2"
+          placeholder="Enter last name"
+        />
+        <div
+          *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+          class="alert"
+        >
+          <div *ngIf="firstName.errors?.['required']">
+            First name is required.
           </div>
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
-
-        <!-- LAST NAME FIELD -->
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Last name</mat-label>
-          <input
-            matInput
-            type="text"
-            name="lastName"
-            [(ngModel)]="UserFormData.lastName"
-            #lastName="ngModel"
-            [required]="!editMode"
-            minlength="2"
-            placeholder="Enter last name"
-          />
-          <div
-            *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
-            class="alert"
-          >
-            <div *ngIf="firstName.errors?.['required']">
-              First name is required.
-            </div>
-            <div *ngIf="firstName.errors?.['minlength']">
-              First name must be at least 2 characters long.
-            </div>
+          <div *ngIf="firstName.errors?.['minlength']">
+            First name must be at least 2 characters long.
           </div>
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
-      </div>
+        </div>
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+    </div>
 
-      <!-- STATUS FIELD -->
-      <div class="form-row">
+    <!-- STATUS FIELD -->
+    <div class="form-row">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Select status</mat-label>
+        <mat-select
+          name="isActive"
+          [(ngModel)]="UserFormData.isActive"
+          [required]="!editMode"
+        >
+          <mat-option [value]="true">Active</mat-option>
+          <mat-option [value]="false">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- ROLE FIELD -->
+      @if (canChangeRole) {
         <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Select status</mat-label>
+          <mat-label>Select role</mat-label>
           <mat-select
-            name="isActive"
-            [(ngModel)]="UserFormData.isActive"
+            name="role"
+            [(ngModel)]="UserFormData.role"
             [required]="!editMode"
           >
-            <!-- <mat-option [value]=null disabled>-- Select status --</mat-option> -->
-            <mat-option [value]="true">Active</mat-option>
-            <mat-option [value]="false">Inactive</mat-option>
+            <mat-option [value]="null" disabled>-- Select role --</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role">
+              {{ role }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
-
-        <!-- ROLE FIELD -->
-        @if (canChangeRole) {
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-label>Select role</mat-label>
-            <mat-select
-              name="role"
-              [(ngModel)]="UserFormData.role"
-              [required]="!editMode"
-            >
-              <mat-option [value]="null" disabled>-- Select role --</mat-option>
-              <mat-option *ngFor="let role of roles" [value]="role">
-                {{ role }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        }
-      </div>
-
-      <!-- PASSWORD FIELD -->
-      @if (canChangePassword) {
-        <div class="form-row">
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              type="password"
-              name="password"
-              [(ngModel)]="UserFormData.password"
-              #password="ngModel"
-              [required]="!editMode"
-              minlength="5"
-              placeholder="Enter password"
-            />
-            <div
-              *ngIf="password.invalid && (password.dirty || password.touched)"
-              class="alert"
-            >
-              <div *ngIf="password.errors?.['required']">
-                Password is required.
-              </div>
-              <div *ngIf="password.errors?.['minlength']">
-                Password must be at least 5 characters long.
-              </div>
-            </div>
-            <mat-icon matSuffix>password</mat-icon>
-          </mat-form-field>
-
-          <!-- CONFIRM PASSWORD FIELD -->
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-label>Confirm password</mat-label>
-            <input
-              matInput
-              type="password"
-              name="confirmPassword"
-              [(ngModel)]="UserFormData.confirmPassword"
-              #confirmPassword="ngModel"
-              [required]="!editMode"
-              minlength="5"
-              placeholder="Confirm password"
-            />
-            <div
-              *ngIf="
-                confirmPassword.invalid &&
-                (confirmPassword.dirty || confirmPassword.touched)
-              "
-              class="alert"
-            >
-              <div *ngIf="confirmPassword.errors?.['required']">
-                Password is required.
-              </div>
-            </div>
-            <div
-              *ngIf="
-                confirmPassword.dirty &&
-                confirmPassword.value &&
-                confirmPassword.value !== UserFormData.password
-              "
-              class="alert"
-            >
-              Passwords must match.
-            </div>
-            <mat-icon matSuffix>password</mat-icon>
-          </mat-form-field>
-        </div>
       }
+    </div>
 
-      <div class="button-group">
-        <!-- Admin -->
-        <button
-          *ngIf="auth.hasRole(Roles.Admin)"
-          mat-raised-button
-          class="save-user"
-          type="submit"
-          [disabled]="!userForm.valid && !editMode"
-        >
-          {{ editMode ? "Update User" : "Create User" }}
-        </button>
+    <!-- PASSWORD FIELD -->
+    @if (canChangePassword) {
+      <div class="form-row">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            name="password"
+            [(ngModel)]="UserFormData.password"
+            #password="ngModel"
+            [required]="!editMode"
+            minlength="5"
+            placeholder="Enter password"
+          />
+          <div
+            *ngIf="password.invalid && (password.dirty || password.touched)"
+            class="alert"
+          >
+            <div *ngIf="password.errors?.['required']">
+              Password is required.
+            </div>
+            <div *ngIf="password.errors?.['minlength']">
+              Password must be at least 5 characters long.
+            </div>
+          </div>
+          <mat-icon matSuffix>password</mat-icon>
+        </mat-form-field>
 
-        <!-- Supervisor -->
-        <button
-          *ngIf="auth.hasRole(Roles.Supervisor)"
-          mat-raised-button
-          class="save-user"
-          type="submit"
-          [disabled]="!editMode"
-        >
-          Update User
-        </button>
-
-        <button
-          mat-raised-button
-          class="reset-form-btn"
-          type="button"
-          (click)="onResetClick()"
-        >
-          Reset form
-        </button>
+        <!-- CONFIRM PASSWORD FIELD -->
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Confirm password</mat-label>
+          <input
+            matInput
+            type="password"
+            name="confirmPassword"
+            [(ngModel)]="UserFormData.confirmPassword"
+            #confirmPassword="ngModel"
+            [required]="!editMode"
+            minlength="5"
+            placeholder="Confirm password"
+          />
+          <div
+            *ngIf="
+              confirmPassword.invalid &&
+              (confirmPassword.dirty || confirmPassword.touched)
+            "
+            class="alert"
+          >
+            <div *ngIf="confirmPassword.errors?.['required']">
+              Password is required.
+            </div>
+          </div>
+          <div
+            *ngIf="
+              confirmPassword.dirty &&
+              confirmPassword.value &&
+              confirmPassword.value !== UserFormData.password
+            "
+            class="alert"
+          >
+            Passwords must match.
+          </div>
+          <mat-icon matSuffix>password</mat-icon>
+        </mat-form-field>
       </div>
-    </form>
-  }
+    }
+
+    <div class="button-group">
+      <!-- Admin Create Button -->
+      <button
+        *ngIf="auth.hasRole(Roles.Admin) && isCreateMode"
+        mat-raised-button
+        class="save-user"
+        type="submit"
+        [disabled]="!userForm.valid"
+      >
+        Create User
+      </button>
+
+      <!-- Admin Update Button -->
+      <button
+        *ngIf="auth.hasRole(Roles.Admin) && isEditMode"
+        mat-raised-button
+        class="save-user"
+        type="submit"
+        [disabled]="!userForm.valid"
+      >
+        Update User
+      </button>
+
+      <!-- Supervisor Update Button (only in edit mode) -->
+      <button
+        *ngIf="auth.hasRole(Roles.Supervisor) && isEditMode"
+        mat-raised-button
+        class="save-user"
+        type="submit"
+        [disabled]="!userForm.valid"
+      >
+        Update User
+      </button>
+
+      <button
+        mat-raised-button
+        class="reset-form-btn"
+        type="button"
+        (click)="onResetClick()"
+      >
+        Reset form
+      </button>
+    </div>
+  </form>
+}

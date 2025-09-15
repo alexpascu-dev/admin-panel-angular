@@ -4,8 +4,9 @@ import {
   AfterViewInit,
   Inject,
   ViewChild,
+  inject,
 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router, NavigationEnd, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -17,11 +18,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Roles } from '../../constants/constants';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -29,10 +31,12 @@ import { CommonModule } from '@angular/common';
     MatSidenavModule,
     MatIconModule,
     MatDividerModule,
-    RouterModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './header.html',
-  styleUrl: './header.css',
+  styleUrls: ['./header.css'],
   host: {
     '[class.collapsed]': '!sidenavExpanded',
   },
@@ -45,15 +49,16 @@ export class Header implements OnInit, AfterViewInit {
   sidenavExpanded = true;
   isMobile = false;
 
+  Roles = Roles;
+
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor(
-    private observer: BreakpointObserver,
-    @Inject(DOCUMENT) private document: Document,
-    private auth: Auth,
-    private snackbar: MatSnackBar,
-    private router: Router,
-  ) {}
+  private observer = inject(BreakpointObserver);
+  public auth = inject(Auth);
+  private snackbar = inject(MatSnackBar);
+  private router = inject(Router);
+
+  constructor(@Inject(DOCUMENT) private document: Document) {}
 
   ngOnInit(): void {
     // Get user details
@@ -63,25 +68,92 @@ export class Header implements OnInit, AfterViewInit {
     this.document.body.classList.remove('backgroundimg');
   }
 
+  ngAfterViewInit() {
+    this.setupResponsiveBehavior();
+    this.setupNavigationBehavior();
+    this.loadSavedState();
+  }
+
+  private setupResponsiveBehavior() {
+    this.observer
+      .observe(['(max-width: 800px)'])
+      .pipe(delay(1))
+      .subscribe((res) => {
+        const wasMobile = this.isMobile;
+        this.isMobile = res.matches;
+
+        if (this.isMobile !== wasMobile) {
+          this.handleModeChange();
+        }
+      });
+  }
+
+  private handleModeChange() {
+    if (this.isMobile) {
+      // Save desktop state before switching to mobile
+      this.saveDesktopState();
+      // Switch to mobile mode
+      this.sidenav.mode = 'over';
+      this.sidenav.close();
+      this.sidenavExpanded = false;
+    } else {
+      // Switch to desktop mode
+      this.sidenav.mode = 'side';
+      this.sidenav.open();
+      this.restoreDesktopState();
+    }
+  }
+
+  private setupNavigationBehavior() {
+    // Close sidenav on navigation (mobile only)
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.isMobile) {
+          this.sidenav.close();
+        }
+      });
+  }
+
+  private loadSavedState() {
+    const savedState = localStorage.getItem('sidenavExpanded');
+    if (savedState && !this.isMobile) {
+      this.sidenavExpanded = savedState === 'true';
+    }
+    
+    // Ensure proper initial state
+    setTimeout(() => {
+      if (!this.isMobile) {
+        this.sidenav.open();
+      }
+    }, 100);
+  }
+
+  private saveDesktopState() {
+    if (!this.isMobile) {
+      localStorage.setItem('sidenavExpanded', String(this.sidenavExpanded));
+    }
+  }
+
+  private restoreDesktopState() {
+    const savedState = localStorage.getItem('sidenavExpanded');
+    this.sidenavExpanded = savedState ? savedState === 'true' : true;
+  }
+
   toggleSidenav() {
     if (this.isMobile) {
-      // On mobile, just toggle the sidenav open/close
       this.sidenav.toggle();
     } else {
-      // On desktop, toggle the expanded state
-      if (this.sidenavExpanded) {
+      this.sidenavExpanded = !this.sidenavExpanded;
+      this.saveDesktopState();
+      
+      if (!this.sidenavExpanded) {
+        // Collapsing: keep sidenav open but visually collapsed
         this.sidenav.open();
-        this.sidenavExpanded = false;
       } else {
-        this.sidenavExpanded = true;
-        setTimeout(() => {
-          this.sidenav.open();
-        }, 150);
+        // Expanding: add slight delay for smooth animation
+        setTimeout(() => this.sidenav.open(), 150);
       }
-      localStorage.setItem(
-        'desktopSidenavExpanded',
-        String(this.sidenavExpanded),
-      );
     }
   }
 
@@ -91,72 +163,6 @@ export class Header implements OnInit, AfterViewInit {
 
   closeMobileMenu() {
     this.sidenav.close();
-  }
-
-  ngAfterViewInit() {
-    // Responsive sidenav behavior
-    this.observer
-      .observe(['(max-width: 800px)'])
-      .pipe(delay(1))
-      .subscribe((res) => {
-        const wasMobile = this.isMobile;
-        this.isMobile = res.matches;
-
-        if (this.isMobile) {
-          // Save desktop state before switching to mobile
-          if (!wasMobile) {
-            localStorage.setItem(
-              'desktopSidenavExpanded',
-              String(this.sidenavExpanded),
-            );
-          }
-          // Mobile: use over mode (overlay), start closed, force collapsed state
-          this.sidenav.mode = 'over';
-          this.sidenav.close();
-          this.sidenavExpanded = false; // Force collapsed state on mobile
-        } else {
-          // Desktop: use side mode, restore saved desktop state
-          this.sidenav.mode = 'side';
-          this.sidenav.open();
-          // Restore saved desktop expanded state
-          const savedDesktopState = localStorage.getItem(
-            'desktopSidenavExpanded',
-          );
-          if (savedDesktopState !== null) {
-            this.sidenavExpanded = savedDesktopState === 'true';
-          } else {
-            // Default desktop state
-            this.sidenavExpanded = true;
-          }
-        }
-      });
-
-    // Close sidenav on navigation (mobile only)
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        if (this.sidenav.mode === 'over') {
-          this.sidenav.close();
-          this.sidenavExpanded = false;
-        }
-      });
-
-    // Ensure sidenav is expanded by default on desktop
-    setTimeout(() => {
-      if (this.sidenav.mode === 'side') {
-        this.sidenav.open();
-        this.sidenavExpanded = true;
-      }
-    }, 100);
-
-    // Load saved state from localStorage
-    const savedState = localStorage.getItem('sidenavExpanded');
-    if (savedState) {
-      this.sidenavExpanded = savedState === 'true';
-      if (!this.sidenavExpanded && this.sidenav.mode === 'side') {
-        this.sidenav.open(); // Keep it open even if collapsed
-      }
-    }
   }
 
   Logout() {

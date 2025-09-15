@@ -36,7 +36,7 @@ export class Login {
             duration: 1000
           });
           setTimeout(() => {
-            this.router.navigate(['/admin/dashboard']);
+            this.router.navigate(['/admin/users']);
           }, 100);
         },
         error: error =>

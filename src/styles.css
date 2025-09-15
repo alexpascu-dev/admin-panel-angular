@@ -1,9 +1,49 @@
-@import '@angular/material/prebuilt-themes/azure-blue.css';
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 mat-form-field {
   width: 100%;
   margin-top: 1rem;
+}
+
+.user-management-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(79,125,215,0.12);
+  padding: 1.5rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Subtitle with blue background */
+.user-management-title {
+  background: linear-gradient(135deg, #4F7DD7, #6b9ded);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-form-container {
+    margin-top: 1rem;
+}
+
+  /* Alerts */
+.alert {
+  color: #a94442;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+   padding: 5px;
+  margin-top: 5px;
 }

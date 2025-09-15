@@ -3,9 +3,11 @@ import {
   NgModule,
   OnInit,
   ChangeDetectionStrategy,
-  AfterViewInit,
   ViewChild,
   HostListener,
+  Output,
+  EventEmitter,
+  Input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../models/user.interface';
@@ -17,9 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { UserFormData } from '../../../../../models/userform.interface';
 import { Auth } from '../../../../auth/auth';
 import { Roles } from '../../../../constants/constants';
@@ -33,9 +32,6 @@ import { UserManagementService } from '../../services/user-management-service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
     MatIconModule,
     MatCardModule,
     MatSelectModule,
@@ -45,15 +41,10 @@ import { UserManagementService } from '../../services/user-management-service';
   styleUrl: './user-form.css',
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class UserForm implements OnInit, AfterViewInit {
-  displayedColumns: string[] = [
-    'username',
-    'firstName',
-    'lastName',
-    'email',
-    'role',
-    'status',
-  ];
+export class UserForm implements OnInit {
+  @Output() userUpdated = new EventEmitter<void>();
+  @Output() userCreated = new EventEmitter<void>();
+  @Input() formMode: 'create' | 'edit' = 'create'; // Default to create mode
 
   UserFormData = {
     userId: 0,
@@ -87,32 +78,8 @@ export class UserForm implements OnInit, AfterViewInit {
 
   roles: string[] = [];
   Roles = Roles;
-  users: User[] = [];
-
-  dataSource = new MatTableDataSource<User>();
-  private search = '';
-  private defaultPageSize = 10;
-  total = 0;
 
   @ViewChild('userForm') form!: NgForm;
-  @ViewChild('filterInput') filterInput!: any;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  ngAfterViewInit() {
-    // Sorting Changes => reset to first page and reload users
-    this.sort.sortChange.subscribe(() => {
-      this.paginator.firstPage();
-      this.loadUsers();
-    });
-
-    // When page changes => load users
-    this.paginator.page.subscribe(() => this.loadUsers());
-
-    // First load
-    this.paginator.pageSize = this.defaultPageSize;
-    this.loadUsers();
-  }
 
   editMode: boolean = false;
 
@@ -147,21 +114,21 @@ export class UserForm implements OnInit, AfterViewInit {
     return this.auth.hasRole(Roles.Admin);
   }
 
-  ngOnInit() {
-    this.loadUsers();
-    if (this.canChangeRole) {
-      this.loadRoles();
-    }
-    if (this.auth.hasAnyRole([Roles.Admin, Roles.Supervisor])) {
-      this.displayedColumns = [...this.displayedColumns, 'actions'];
-    }
+  get isCreateMode() {
+    return this.formMode === 'create';
   }
 
-  loadUsers() {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.loadUsers(context);
-    this.users = context.users;
-    this.total = context.total;
+  get isEditMode() {
+    return this.formMode === 'edit';
+  }
+
+  get buttonText() {
+    return this.isEditMode ? 'Update User' : 'Create User';
+  }
+
+  ngOnInit() {
+    // Only load roles for the form
+    this.loadRoles();
   }
 
   loadRoles() {
@@ -170,31 +137,32 @@ export class UserForm implements OnInit, AfterViewInit {
     this.roles = context.roles;
   }
 
-  deleteUser(userId: number) {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.deleteUser(userId, context);
-  }
-
-  onEditClick(user: User) {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.onEditClick(user, context);
-
-    this.editMode = context.editMode;
-    this.UserFormData = { ...context.UserFormData };
-  }
-
   onUserFormSubmit(form: NgForm) {
     const context = this.userManagementService.createContext(this);
     this.userManagementService.onUserFormSubmit(form, context, () =>
       this.onResetClick(),
     );
+
+    // Emit event to parent based on form mode
+    if (this.isEditMode) {
+      this.userUpdated.emit();
+    } else {
+      this.userCreated.emit();
+    }
   }
 
-  applyFilter(searchFilter: Event) {
-    if (!this.canSeeForm) return;
-    const value = (searchFilter.target as HTMLInputElement).value ?? '';
-    this.search = value.trim();
-    this.paginator.firstPage();
-    this.loadUsers();
+  populateFormForEdit(user: User) {
+    this.editMode = true;
+    this.UserFormData = {
+      userId: user.userId,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      isActive: user.isActive,
+      role: user.role,
+      password: '',
+      confirmPassword: '',
+    };
   }
 }

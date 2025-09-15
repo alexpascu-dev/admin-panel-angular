@@ -7,6 +7,6 @@ import { UsersTable } from '../../components/users-table/users-table';
   selector: 'app-users-table-read',
   imports: [CommonModule, UsersTable],
   templateUrl: './users-table-read.html',
-  styleUrl: './users-table-read.css'
+  styleUrl: './users-table-read.css',
 })
 export class UsersTableRead {}

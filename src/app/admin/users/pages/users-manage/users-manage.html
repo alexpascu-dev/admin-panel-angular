@@ -1,1 +1,20 @@
-<p>users-manage works!</p>
+<div class="user-management-card">
+  <div class="user-management-title">
+    User Management System
+    <div class="row">
+      <div class="col-sm-2"></div>
+    </div>
+  </div>
+    <div class="user-form-container">
+      <h4>Edit User</h4>
+    </div>
+  <app-users-table (editUser)="onEditUser($event)"></app-users-table>
+  <div *ngIf="canSeeForm">
+    <app-user-form
+      formMode="edit"
+      (userUpdated)="onUserUpdated()"
+      (userCreated)="onUserCreated()"
+    >
+    </app-user-form>
+  </div>
+</div>

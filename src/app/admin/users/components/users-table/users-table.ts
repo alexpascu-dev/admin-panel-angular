@@ -6,21 +6,21 @@ import {
   AfterViewInit,
   ViewChild,
   HostListener,
+  Output,
+  EventEmitter,
+  Input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../models/user.interface';
-import { FormsModule, NgForm } from '@angular/forms';
 import { inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { UserFormData } from '../../../../../models/userform.interface';
 import { Auth } from '../../../../auth/auth';
 import { Roles } from '../../../../constants/constants';
 import { UserManagementService } from '../../services/user-management-service';
@@ -38,14 +38,15 @@ import { UserManagementService } from '../../services/user-management-service';
     MatPaginatorModule,
     MatIconModule,
     MatCardModule,
-    MatSelectModule,
-    FormsModule,
   ],
   templateUrl: './users-table.html',
   styleUrl: './users-table.css',
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class UsersTable implements OnInit, AfterViewInit {
+  @Output() editUser = new EventEmitter<User>();
+  @Input() hideActions: boolean = false; // Input to control actions column visibility
+
   displayedColumns: string[] = [
     'username',
     'firstName',
@@ -54,28 +55,6 @@ export class UsersTable implements OnInit, AfterViewInit {
     'role',
     'status',
   ];
-
-  UserFormData = {
-    userId: 0,
-    username: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: '',
-    isActive: true,
-    password: '',
-    confirmPassword: '',
-  };
-
-  UpdateUserDto = {
-    userId: 0,
-    username: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: '',
-    isActive: true,
-  };
 
   public auth = inject(Auth);
   private userManagementService = inject(UserManagementService);
@@ -94,7 +73,6 @@ export class UsersTable implements OnInit, AfterViewInit {
   private defaultPageSize = 10;
   total = 0;
 
-  @ViewChild('userForm') form!: NgForm;
   @ViewChild('filterInput') filterInput!: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -114,33 +92,8 @@ export class UsersTable implements OnInit, AfterViewInit {
     this.loadUsers();
   }
 
-  editMode: boolean = false;
-
-  onResetClick(): void {
-    const emptyForm: UserFormData = {
-      userId: 0,
-      username: '',
-      email: '',
-      firstName: '',
-      lastName: '',
-      role: '',
-      isActive: true,
-      password: '',
-      confirmPassword: '',
-    };
-
-    this.UserFormData = emptyForm;
-    this.form.resetForm({ ...emptyForm });
-
-    this.editMode = false;
-  }
-
   get canSeeForm() {
     return this.auth.hasAnyRole([Roles.Admin, Roles.Supervisor]);
-  }
-
-  get canChangePassword() {
-    return this.auth.hasRole(Roles.Admin);
   }
 
   get canChangeRole() {
@@ -152,7 +105,11 @@ export class UsersTable implements OnInit, AfterViewInit {
     if (this.canChangeRole) {
       this.loadRoles();
     }
-    if (this.auth.hasAnyRole([Roles.Admin, Roles.Supervisor])) {
+    // Add actions column only if user has permissions AND hideActions is false
+    if (
+      this.auth.hasAnyRole([Roles.Admin, Roles.Supervisor]) &&
+      !this.hideActions
+    ) {
       this.displayedColumns = [...this.displayedColumns, 'actions'];
     }
   }
@@ -176,18 +133,7 @@ export class UsersTable implements OnInit, AfterViewInit {
   }
 
   onEditClick(user: User) {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.onEditClick(user, context);
-
-    this.editMode = context.editMode;
-    this.UserFormData = { ...context.UserFormData };
-  }
-
-  onUserFormSubmit(form: NgForm) {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.onUserFormSubmit(form, context, () =>
-      this.onResetClick(),
-    );
+    this.editUser.emit(user);
   }
 
   applyFilter(searchFilter: Event) {

@@ -87,7 +87,7 @@
     <button
       mat-button
       class="menu-button"
-      routerLink="/admin/dashboard"
+      routerLink="/admin/users"
       routerLinkActive="is-active"
     >
       <mat-icon>visibility</mat-icon
@@ -97,23 +97,26 @@
     <mat-divider></mat-divider>
     
     <!-- Add Users btn -->
+    @if (auth.hasRole(Roles.Admin)) {
     <button
       mat-button
       class="menu-button"
-      routerLink="/admin/dashboard"
+      routerLink="/admin/users/new"
       routerLinkActive="is-active"
     >
       <mat-icon>add_circle</mat-icon
       ><span class="item" *ngIf="sidenavExpanded">Add Users</span>
-    </button>    
+    </button>  
 
     <mat-divider></mat-divider>
+  }
 
     <!-- Edit/Delete Users btn -->
+    @if (this.auth.hasAnyRole([Roles.Admin, Roles.Supervisor])) {
     <button
       mat-button
       class="menu-button"
-      routerLink="/admin/dashboard"
+      routerLink="/admin/users/manage"
       routerLinkActive="is-active"
     >
       <mat-icon>create</mat-icon
@@ -121,19 +124,20 @@
     </button>
 
     <mat-divider></mat-divider>    
+  }
 
-    <!-- Edit/Delete Users btn -->
-    <button
+        <!-- Reports btn -->
+    <!-- <button
       mat-button
       class="menu-button"
-      routerLink="/admin/dashboard"
+      routerLink="/admin/users/dashboard"
       routerLinkActive="is-active"
     >
-      <mat-icon>insert_drive_file</mat-icon
-      ><span class="item" *ngIf="sidenavExpanded">Reports</span>
+      <mat-icon>create</mat-icon
+      ><span class="item" *ngIf="sidenavExpanded">Dashboard</span>
     </button>
 
-    <mat-divider></mat-divider>    
+    <mat-divider></mat-divider>     -->
 
     <!-- Logout button -->
     <button mat-button class="menu-button logout-button" (click)="Logout()">
@@ -165,7 +169,7 @@
       class="main-content-wrapper"
       [ngClass]="{ 'mobile-content': isMobile }"
     >
-      <ng-content></ng-content>
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
