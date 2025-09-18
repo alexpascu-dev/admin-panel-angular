@@ -1,39 +1,90 @@
 <div class="login-container">
-    <div class="login-box">
-        <p class="login-title">User Login</p>
+  <div class="login-box">
+    <h1 class="login-title">{{ "LOGIN.TITLE" | translate }}</h1>
 
-        <form class="login-form" #loginForm="ngForm" (ngSubmit)="loginBtn(loginForm)" novalidate>
-            <input 
-                type="text"
-                name="username"
-                [(ngModel)]="LoginData.username"
-                #username="ngModel"
-                required
-                placeholder="Enter username"                
-            />
-                <div *ngIf="username.invalid && (username.dirty || username.touched)" class="error-message">
-                    Username is required.
-                </div>
+    <form
+      class="login-form"
+      #loginForm="ngForm"
+      (ngSubmit)="loginBtn(loginForm)"
+      novalidate
+    >
+      <div class="input-group">
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="LoginData.username"
+          #username="ngModel"
+          required
+          [placeholder]="'LOGIN.USERNAME' | translate"
+          [disabled]="isLoading"
+          aria-label="Username"
+          autocomplete="username"
+        />
+        <div
+          *ngIf="username.invalid && (username.dirty || username.touched)"
+          class="error-message"
+          role="alert"
+        >
+          {{ "LOGIN.USERNAME_REQUIRED" | translate }}
+        </div>
+      </div>
 
-            <input 
-                type="password"
-                name="password"
-                [(ngModel)]="LoginData.password"
-                #password="ngModel"
-                required
-                placeholder="Enter password"
-            />
-                <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
-                    Password is required.
-                </div>
+      <div class="input-group">
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="LoginData.password"
+          #password="ngModel"
+          required
+          [placeholder]="'LOGIN.PASSWORD' | translate"
+          [disabled]="isLoading"
+          aria-label="Password"
+          autocomplete="current-password"
+        />
+        <div
+          *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+          class="error-message"
+          role="alert"
+        >
+          {{ "LOGIN.PASSWORD_REQUIRED" | translate }}
+        </div>
+      </div>
 
-                <button mat-raised-button 
-                class="login-btn"
-                type="submit"
-                [disabled]="!loginForm.valid"
-                >
-                Login
-                </button>
-        </form>
+      <button
+        mat-raised-button
+        class="login-btn"
+        type="submit"
+        [disabled]="!loginForm.valid || isLoading"
+        [class.loading]="isLoading"
+      >
+        <span *ngIf="!isLoading">{{ "LOGIN.LOGIN_BUTTON" | translate }}</span>
+        <span *ngIf="isLoading" class="loading-text">
+          <span class="spinner"></span>
+          Loading...
+        </span>
+      </button>
+    </form>
+
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+      <button
+        mat-button
+        (click)="switchLanguage('en')"
+        [class.active]="currentLang === 'en'"
+        [disabled]="isLoading"
+        aria-label="Switch to English"
+      >
+        {{ "LOGIN.ENGLISH" | translate }}
+      </button>
+      <button
+        mat-button
+        (click)="switchLanguage('ro')"
+        [class.active]="currentLang === 'ro'"
+        [disabled]="isLoading"
+        aria-label="Switch to Romanian"
+      >
+        {{ "LOGIN.ROMANIAN" | translate }}
+      </button>
     </div>
+  </div>
 </div>

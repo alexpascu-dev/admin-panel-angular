@@ -5,6 +5,7 @@ import {
   Inject,
   ViewChild,
   inject,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router, NavigationEnd, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
@@ -45,7 +46,7 @@ export class Header implements OnInit, AfterViewInit {
   userDetailsEmail = '';
   userDetailsName = '';
   user_role = '';
-  title = '🛠 Admin Panel';
+  title = '🛠️ Admin Panel';
   sidenavExpanded = true;
   isMobile = false;
 
@@ -54,6 +55,7 @@ export class Header implements OnInit, AfterViewInit {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   private observer = inject(BreakpointObserver);
+  private cdr = inject(ChangeDetectorRef);
   public auth = inject(Auth);
   private snackbar = inject(MatSnackBar);
   private router = inject(Router);
@@ -61,7 +63,6 @@ export class Header implements OnInit, AfterViewInit {
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
   ngOnInit(): void {
-    // Get user details
     this.userDetailsEmail = this.auth.getCurrentUserEmail();
     this.userDetailsName = this.auth.getCurrentUsername();
     this.user_role = this.auth.getCurrentUserRole();
@@ -69,9 +70,12 @@ export class Header implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.setupResponsiveBehavior();
-    this.setupNavigationBehavior();
-    this.loadSavedState();
+    // Defer setup to next tick to avoid change detection issues
+    setTimeout(() => {
+      this.setupResponsiveBehavior();
+      this.setupNavigationBehavior();
+      this.loadSavedState();
+    }, 0);
   }
 
   private setupResponsiveBehavior() {
@@ -79,10 +83,8 @@ export class Header implements OnInit, AfterViewInit {
       .observe(['(max-width: 800px)'])
       .pipe(delay(1))
       .subscribe((res) => {
-        const wasMobile = this.isMobile;
-        this.isMobile = res.matches;
-
-        if (this.isMobile !== wasMobile) {
+        if (this.isMobile !== res.matches) {
+          this.isMobile = res.matches;
           this.handleModeChange();
         }
       });
@@ -90,22 +92,19 @@ export class Header implements OnInit, AfterViewInit {
 
   private handleModeChange() {
     if (this.isMobile) {
-      // Save desktop state before switching to mobile
-      this.saveDesktopState();
-      // Switch to mobile mode
+      this.saveState();
       this.sidenav.mode = 'over';
       this.sidenav.close();
       this.sidenavExpanded = false;
     } else {
-      // Switch to desktop mode
       this.sidenav.mode = 'side';
       this.sidenav.open();
-      this.restoreDesktopState();
+      this.loadState();
     }
+    this.cdr.detectChanges();
   }
 
   private setupNavigationBehavior() {
-    // Close sidenav on navigation (mobile only)
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -116,12 +115,7 @@ export class Header implements OnInit, AfterViewInit {
   }
 
   private loadSavedState() {
-    const savedState = localStorage.getItem('sidenavExpanded');
-    if (savedState && !this.isMobile) {
-      this.sidenavExpanded = savedState === 'true';
-    }
-    
-    // Ensure proper initial state
+    this.loadState();
     setTimeout(() => {
       if (!this.isMobile) {
         this.sidenav.open();
@@ -129,15 +123,20 @@ export class Header implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  private saveDesktopState() {
+  private saveState() {
     if (!this.isMobile) {
       localStorage.setItem('sidenavExpanded', String(this.sidenavExpanded));
     }
   }
 
-  private restoreDesktopState() {
-    const savedState = localStorage.getItem('sidenavExpanded');
-    this.sidenavExpanded = savedState ? savedState === 'true' : true;
+  private loadState() {
+    const saved = localStorage.getItem('sidenavExpanded');
+    const newExpanded = saved ? saved === 'true' : true;
+    
+    if (this.sidenavExpanded !== newExpanded) {
+      this.sidenavExpanded = newExpanded;
+      this.cdr.markForCheck();
+    }
   }
 
   toggleSidenav() {
@@ -145,14 +144,13 @@ export class Header implements OnInit, AfterViewInit {
       this.sidenav.toggle();
     } else {
       this.sidenavExpanded = !this.sidenavExpanded;
-      this.saveDesktopState();
+      this.saveState();
+      this.cdr.detectChanges();
       
-      if (!this.sidenavExpanded) {
-        // Collapsing: keep sidenav open but visually collapsed
-        this.sidenav.open();
-      } else {
-        // Expanding: add slight delay for smooth animation
+      if (this.sidenavExpanded) {
         setTimeout(() => this.sidenav.open(), 150);
+      } else {
+        this.sidenav.open();
       }
     }
   }
@@ -166,9 +164,13 @@ export class Header implements OnInit, AfterViewInit {
   }
 
   Logout() {
-    this.auth.logout();
-    this.snackbar.open('You have been logged out.', 'Close', {
-      duration: 2000,
-    });
+    const confirmation = confirm('Are you sure you want to logout?');
+
+    if (confirmation) {
+      this.auth.logout();
+      this.snackbar.open('You have been logged out.', 'Close', {
+        duration: 2000,
+      });
+    }
   }
 }

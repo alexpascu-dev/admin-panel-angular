@@ -1,5 +1,66 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+  font-family: "Roboto";
+  src:
+    local("Roboto Light"),
+    local("Roboto-Light"),
+    url("/assets/webfonts/Roboto/static/Roboto-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src:
+    local("Roboto Regular"),
+    local("Roboto-Regular"),
+    url("/assets/webfonts/Roboto/static/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src:
+    local("Roboto Medium"),
+    local("Roboto-Medium"),
+    url("/assets/webfonts/Roboto/static/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400 !important;
+  font-synthesis-weight: none;
+}
+
+/* Force regular font weight for Material components */
+.mat-mdc-table,
+.mat-table,
+.mdc-data-table,
+.mat-mdc-cell,
+.mat-cell,
+.mat-mdc-header-cell,
+.mat-header-cell,
+.mat-mdc-table-container,
+td,
+th,
+table {
+  font-weight: 400 !important;
+}
+
+/* Ensure all text uses regular weight */
+* {
+  font-weight: 400 !important;
+}
 
 mat-form-field {
   width: 100%;
@@ -9,7 +70,7 @@ mat-form-field {
 .user-management-card {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(79,125,215,0.12);
+  box-shadow: 0 4px 24px rgba(79, 125, 215, 0.12);
   padding: 1.5rem;
   margin: 0.5rem 0;
   width: 100%;
@@ -21,29 +82,29 @@ mat-form-field {
 
 /* Subtitle with blue background */
 .user-management-title {
-  background: linear-gradient(135deg, #4F7DD7, #6b9ded);
+  background: linear-gradient(135deg, #4f7dd7, #6b9ded);
   color: #fff;
   padding: 1rem 2rem;
   border-radius: 12px;
   font-size: 1.3rem;
   font-weight: 500;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 8px rgba(79,125,215,0.08);
+  box-shadow: 0 2px 8px rgba(79, 125, 215, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .user-form-container {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
-  /* Alerts */
+/* Alerts */
 .alert {
   color: #a94442;
   background-color: #f2dede;
   border: 1px solid #ebccd1;
   border-radius: 4px;
-   padding: 5px;
+  padding: 5px;
   margin-top: 5px;
 }

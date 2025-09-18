@@ -8,12 +8,13 @@ import { GetUserRolesDto } from '../../../../models/GetUserRolesDto';
 import { ChangePasswordDto } from '../../../../models/ChangePasswordDto';
 import { PagedUsersQuery } from '../../../../models/PagedUsersQuery';
 import { PagedResult } from '../../../../models/PagedResult';
+import { apiUrl } from '../../../constants/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardDataService {
-  private apiUrl = 'http://209.38.254.238/api/users';
+  private apiUrl = apiUrl;
 
   private http = inject(HttpClient);
 
@@ -23,7 +24,7 @@ export class DashboardDataService {
   // }
 
   getUsers(query: PagedUsersQuery): Observable<PagedResult<GetUserDto>> {
-    const url = `${this.apiUrl}/all-users`;
+    const url = `${apiUrl}/users/all-users`;
 
     let params = new HttpParams()
       .set('pageIndex', query.pageIndex)
@@ -38,37 +39,37 @@ export class DashboardDataService {
 
   // GET USER INFO FROM TOKEN
   getMe(): Observable<GetUserDto> {
-    const url = `${this.apiUrl}/me`;
+    const url = `${apiUrl}/users/me`;
     return this.http.get<GetUserDto>(url);
   }
 
   // GET ROLES API
   getRoles(): Observable<GetUserRolesDto[]> {
-    const url = `${this.apiUrl}/roles`;
+    const url = `${apiUrl}/users/roles`;
     return this.http.get<GetUserRolesDto[]>(url);
   }
 
   // POST METHOD
   createUser(UserDataSent: AddUserDto): Observable<AddUserDto> {
-    const url = `${this.apiUrl}/register`;
+    const url = `${apiUrl}/users/register`;
     return this.http.post<AddUserDto>(url, UserDataSent);
   }
 
   //PUT METHOD
   editUser(user: UpdateUserDto): Observable<UpdateUserDto> {
-    const url = `${this.apiUrl}/update`;
+    const url = `${apiUrl}/users/update`;
     return this.http.put<UpdateUserDto>(url, user);
   }
 
   //CHANGE PASSWORD
   changePassword(userDataSent: ChangePasswordDto) {
-    const url = `${this.apiUrl}/update/change-password`;
+    const url = `${apiUrl}/users/update/change-password`;
     return this.http.put<ChangePasswordDto>(url, userDataSent);
   }
 
   // DELETE METHOD
   deleteUser(userId: number): Observable<unknown> {
-    const url = `${this.apiUrl}/${userId}`;
+    const url = `${apiUrl}/users/${userId}`;
     return this.http.delete(url);
   }
 }

@@ -1,0 +1,48 @@
+.barcode-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.controls {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.barcode-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.format-select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.clear-button {
+  padding: 10px 15px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.clear-button:hover {
+  background-color: #d32f2f;
+}
+
+.barcode-display {
+  margin-top: 20px;
+}
+
+canvas {
+  border: 1px solid #ddd;
+  max-width: 100%;
+}

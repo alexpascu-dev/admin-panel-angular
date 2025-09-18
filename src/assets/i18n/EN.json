@@ -1,0 +1,14 @@
+{
+  "LOGIN": {
+    "TITLE": "User Login",
+    "USERNAME": "Enter username",
+    "PASSWORD": "Enter password",
+    "USERNAME_REQUIRED": "Username is required.",
+    "PASSWORD_REQUIRED": "Password is required.",
+    "LOGIN_BUTTON": "Login",
+    "LOGIN_SUCCESS": "Logged in successfully!",
+    "WRONG_CREDENTIALS": "Wrong credentials",
+    "ENGLISH": "En",
+    "ROMANIAN": "Ro"
+  }
+}

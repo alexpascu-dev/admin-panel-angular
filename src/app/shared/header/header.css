@@ -1,7 +1,6 @@
-/* ===== ROOT CONTAINER & VARIABLES ===== */
+/* ===== ROOT & VARIABLES ===== */
 :host {
   --sidenav-width: 280px;
-  --mobile-sidenav-width: 60px;
   display: block;
   height: 100%;
 }
@@ -10,30 +9,19 @@
   --sidenav-width: 64px;
 }
 
-/* ===== DESKTOP SIDENAV CONTAINER ===== */
+/* ===== SIDENAV CONTAINER ===== */
 mat-sidenav-container {
   height: 100vh;
   transition: all 0.3s ease;
-  width: 100%;
-  --sidenav-width: 280px;
 }
 
-mat-sidenav-container.sidenav-container-collapsed {
-  --sidenav-width: 64px;
-}
-
-mat-sidenav-container mat-sidenav-content {
-  margin-left: var(--sidenav-width) !important;
-  transition: margin-left 0.3s ease !important;
-}
-
-/* Override Angular Material's automatic margin calculation */
+mat-sidenav-container mat-sidenav-content,
 .mat-drawer-content {
   margin-left: var(--sidenav-width) !important;
   transition: margin-left 0.3s ease !important;
 }
 
-/* ===== DESKTOP SIDENAV STYLING ===== */
+/* ===== SIDENAV STYLING ===== */
 mat-sidenav {
   width: 280px;
   border-right: none;
@@ -47,13 +35,12 @@ mat-sidenav {
   max-height: 100vh;
 }
 
+
 .sidenav-collapsed {
   width: 64px !important;
-  transition: all 0.3s ease;
   overflow-x: hidden;
 }
 
-/* Fix content overlap when sidenav is collapsed */
 .sidenav-collapsed + .mat-drawer-content {
   margin-left: 64px !important;
 }
@@ -69,7 +56,7 @@ mat-sidenav-content {
   overflow-y: auto;
 }
 
-/* ===== DESKTOP NAVBAR TITLE STYLING ===== */
+/* ===== HEADER SECTIONS ===== */
 .navbar-title {
   display: flex;
   flex-direction: column;
@@ -97,18 +84,7 @@ mat-sidenav-content {
   color: #499df7;
 }
 
-.collapsed-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.expanded-content {
-  width: 100%;
-}
-
-/* ===== DESKTOP TOGGLE BUTTON STYLING ===== */
+/* ===== TOGGLE BUTTONS ===== */
 .toggle-container {
   position: absolute;
   top: 10px;
@@ -117,30 +93,16 @@ mat-sidenav-content {
 }
 
 .toggle-container-collapsed {
-  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   padding: 8px 0;
 }
 
-.toggle-sidebar-minimal-btn {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: #fff;
-  background-color: transparent;
-}
-
+.toggle-sidebar-minimal-btn,
 .toggle-sidebar-center-btn {
   width: 40px;
   height: 40px;
-  line-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,38 +111,37 @@ mat-sidenav-content {
   background-color: transparent;
 }
 
-.toggle-sidebar-minimal-btn:hover {
-  color: #ffffff;
+.toggle-sidebar-minimal-btn:hover,
+.toggle-sidebar-center-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ===== DESKTOP USER INFO SECTION ===== */
+/* ===== USER INFO ===== */
 .user-info {
   padding: 6px 0 12px 0;
 }
 
-.name {
+.user-info .name {
   margin: 4px 0;
   font-weight: normal;
 }
 
-.email {
+.user-info .email {
   opacity: 0.8;
   font-size: 0.85rem;
 }
 
-.role {
+.user-info .role {
   opacity: 0.7;
   font-size: 0.75rem;
   font-style: italic;
 }
 
-/* ===== DESKTOP NAVIGATION BUTTONS ===== */
+/* ===== NAVIGATION BUTTONS ===== */
 .menu-button {
   width: 100%;
   display: flex;
   align-items: center;
-  text-align: center;
   justify-content: center;
   padding: 0 8px;
   margin: 0 auto;
@@ -190,7 +151,23 @@ mat-sidenav-content {
   transition: background-color 0.3s;
 }
 
-/* Navigation buttons in collapsed state */
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.is-active {
+  color: white;
+}
+
+.item {
+  margin-left: 12px;
+}
+
+.logout-button {
+  margin-top: auto;
+}
+
+/* ===== COLLAPSED STATE ===== */
 .sidenav-collapsed .menu-button {
   justify-content: center;
   padding: 10px 0;
@@ -207,31 +184,7 @@ mat-sidenav-content {
   margin: 0;
 }
 
-.menu-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.is-active {
-  color: white;
-}
-
-.item {
-  margin-left: 12px;
-}
-
-/* Logout button special styling */
-.logout-button {
-  margin-top: auto;
-}
-
-/* ===== DESKTOP CONTENT STYLING ===== */
-/* Content expansion when sidenav is collapsed */
-.content-expanded {
-  margin-left: 64px !important;
-  transition: margin-left 0.3s ease;
-}
-
-/* ===== DESKTOP UTILITY CLASSES ===== */
+/* ===== UTILITIES ===== */
 .desktop-only {
   display: flex;
 }
@@ -240,7 +193,12 @@ mat-divider {
   margin: 10px 0;
 }
 
-/* ===== MOBILE RESPONSIVE STYLES ===== */
+.content-expanded {
+  margin-left: 64px !important;
+  transition: margin-left 0.3s ease;
+}
+
+/* ===== MOBILE STYLES ===== */
 @media (max-width: 800px) {
   .content-expanded {
     margin-left: 0 !important;
@@ -248,27 +206,19 @@ mat-divider {
 }
 
 @media (max-width: 768px) {
-  /* Mobile root container */
   :host {
-    --sidenav-width: 60px !important; /* Slim sidebar on mobile */
+    --sidenav-width: 60px !important;
   }
 
-  :host(.collapsed) {
-    --sidenav-width: 60px !important; /* Keep slim sidebar width */
-  }
-
-  /* Mobile header styling */
   .mobile-header {
     color: white;
     background: #6b9ded;
-    width: 100%;
     display: flex !important;
     align-items: center;
     justify-content: space-between;
     font-size: 1rem;
     padding: 0 16px;
     font-weight: 600;
-    border-radius: 0;
     box-shadow: 0 2px 8px rgba(79, 125, 215, 0.12);
     height: 56px;
     position: fixed;
@@ -289,21 +239,13 @@ mat-divider {
     margin-left: auto;
   }
 
-  .mobile-nav-icon {
-    display: flex;
-    align-items: center;
-  }
-
-  /* Mobile content wrapper */
   .mobile-content {
     padding-top: 0 !important;
     height: calc(100vh - 56px);
     overflow-y: auto;
   }
 
-  /* Mobile close button styling */
   .mobile-close-container {
-    display: block;
     position: fixed;
     top: 10px;
     right: 10px;
@@ -317,7 +259,6 @@ mat-divider {
   .mobile-close-btn {
     width: 40px;
     height: 40px;
-    line-height: 40px;
     color: #333;
     background-color: transparent;
     border-radius: 50%;
@@ -330,45 +271,29 @@ mat-divider {
     background-color: rgba(0, 0, 0, 0.05);
   }
 
-  /* Mobile sidenav container */
   mat-sidenav-container {
     height: 100vh;
-    margin-top: 56px; /* Account for fixed header */
-  }
-
-  /* Remove backdrop on mobile */
-  .mat-drawer-backdrop {
-    display: none !important;
+    margin-top: 56px;
   }
 
   mat-sidenav-content {
-    margin-left: 60px !important; /* Slim sidebar width */
+    margin-left: 60px !important;
   }
 
   .desktop-only {
     display: none;
   }
 
-  /* Mobile sidenav styling */
   mat-sidenav {
     width: 60px !important;
-    left: 0;
     top: 56px;
     height: calc(100vh - 56px) !important;
     position: fixed;
-    background: #3c3c3c;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 999;
     overflow-x: hidden;
-    padding: 0;
   }
 
-  /* Hide close button on mobile */
-  .mobile-close-container {
-    display: none !important;
-  }
-
-  /* Hide text on mobile */
   .navbar-title h2,
   .user-info,
   .menu-button .item,
@@ -376,7 +301,6 @@ mat-divider {
     display: none !important;
   }
 
-  /* Center logo on mobile */
   .navbar-title,
   .navbar-title-minimal {
     padding: 12px 0;
@@ -384,7 +308,6 @@ mat-divider {
     justify-content: center;
   }
 
-  /* Style menu buttons for mobile */
   .menu-button {
     padding: 0;
     margin: 0;
@@ -398,7 +321,6 @@ mat-divider {
     margin: 0;
   }
 
-  /* Simplify dividers */
   mat-divider {
     margin: 0;
     opacity: 0.2;
@@ -412,10 +334,6 @@ mat-divider {
 
   .mobile-title {
     font-size: 1rem;
-  }
-
-  mat-sidenav {
-    width: 60px !important; /* Keep slim sidebar */
   }
 
   .menu-button {
@@ -433,19 +351,13 @@ mat-divider {
   }
 
   .mat-sidenav-content {
-    margin-left: 0 !important; /* Remove any left margin on mobile */
+    margin-left: 0 !important;
   }
 
   .mobile-close-container {
     display: block !important;
   }
 
-  /* Hide desktop-only elements on mobile */
-  .desktop-only {
-    display: none !important;
-  }
-
-  /* Force full width content on mobile */
   .sidenav-container-collapsed .mat-sidenav-content,
   .mat-sidenav-content {
     margin-left: 0 !important;

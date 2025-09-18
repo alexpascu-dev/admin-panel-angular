@@ -1,0 +1,14 @@
+{
+  "LOGIN": {
+    "TITLE": "Autentificare Utilizator",
+    "USERNAME": "Introduceți numele de utilizator",
+    "PASSWORD": "Introduceți parola",
+    "USERNAME_REQUIRED": "Numele de utilizator este obligatoriu.",
+    "PASSWORD_REQUIRED": "Parola este obligatorie.",
+    "LOGIN_BUTTON": "Conectare",
+    "LOGIN_SUCCESS": "Autentificare reușită!",
+    "WRONG_CREDENTIALS": "Credențiale greșite",
+    "ENGLISH": "En",
+    "ROMANIAN": "Ro"
+  }
+}

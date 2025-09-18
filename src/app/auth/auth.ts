@@ -7,13 +7,14 @@ import { CurrentUserPayload } from '../../models/CurrentUserPayload';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { apiUrl } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   private readonly JWT_TOKEN = 'JWT_TOKEN';
-  private readonly API_URL = 'http://209.38.254.238/api/auth/login';
+  private readonly API_URL = `${apiUrl}/auth/login`;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
   private router = inject(Router);

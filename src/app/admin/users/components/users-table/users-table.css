@@ -16,9 +16,6 @@
 .mat-elevation-z8 :where(.mat-header-row, .mat-mdc-header-row),
 .user-management-card :where(.mat-header-row, .mat-mdc-header-row) {
   background: #e7ebf3 !important;
-  font-weight: 550;
-    font-size: small;
-
 }
 
 /* Hover over cells */

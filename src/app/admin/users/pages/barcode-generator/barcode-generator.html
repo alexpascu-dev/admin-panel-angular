@@ -1,0 +1,26 @@
+<div class="barcode-container">
+  <h2>Barcode Generator</h2>
+  
+  <div class="controls">
+    <input 
+      [(ngModel)]="barcodeData" 
+      (input)="onInputChange()"
+      placeholder="Enter text to encode"
+      class="barcode-input">
+    
+    <select [(ngModel)]="barcodeFormat" (change)="onInputChange()" class="format-select">
+      <option value="CODE128">CODE128</option>
+      <option value="CODE39">CODE39</option>
+      <option value="EAN13">EAN13</option>
+      <option value="EAN8">EAN8</option>
+      <option value="UPC">UPC</option>
+      <option value="ITF14">ITF14</option>
+    </select>
+    
+    <button (click)="clearBarcode()" class="clear-button">Clear</button>
+  </div>
+
+  <div class="barcode-display">
+    <canvas #barcodeCanvas></canvas>
+  </div>
+</div>

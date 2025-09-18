@@ -4,6 +4,4 @@ export const Roles = {
     User: 'USER'
 } as const;
 
-export const ApiUrls = {
-
-};
+export const apiUrl = 'http://209.38.254.238/api';

@@ -1,6 +1,6 @@
 /* Card efect pentru User Management */
 .user-form-container {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .form-row {
@@ -56,28 +56,30 @@ button.reset-form-btn[mat-raised-button] {
 
 button.reset-form-btn[mat-raised-button]:hover {
   background-color: #93bde2;
+}
 
 button[mat-raised-button] {
-  transition: background-color 0.3s ease, transform 0.15s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.15s ease;
   padding: 16px;
 }
 
 button[mat-raised-button]:hover {
   transform: translateY(-2px);
-}  
+}
 
-  /* Mobile features */
+/* Mobile features */
 @media (max-width: 768px) {
-
   .user-management-card {
     padding: 1rem;
     margin: 1rem 0;
-  }  
+  }
 
   button[mat-raised-button] {
     padding: 6px 10px;
-    font-size: .9rem;
-    margin-bottom: .2rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
   }
 
   .button-group {
@@ -93,5 +95,14 @@ button[mat-raised-button]:hover {
     min-width: 120px;
     justify-content: center;
   }
-}
+
+  .form-row {
+    margin-bottom: 0.6rem;
+    margin-top: 0.6rem;
+    gap: 1rem;
+  }
+
+  .user-form-container {
+    margin-top: 0.5rem;
+  }
 }

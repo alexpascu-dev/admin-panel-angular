@@ -46,12 +46,12 @@ export const routes: Routes = [
         canActivate: [roleCanActivate],
         data: { roles: ['ADMIN'] }
       },
-      // {
-      //   path: 'users/reports',
-      //   loadComponent: () =>
-      //     import('./admin/users/reports')
-      //   .then(m => m.Dashboard)
-      // },
+      {
+        path: 'users/barcode',
+        loadComponent: () =>
+          import('./admin/users/pages/barcode-generator/barcode-generator')
+        .then(m => m.BarcodeGenerator)
+      },
       { path: '', pathMatch: 'full', redirectTo: 'users' }
     ]
   },

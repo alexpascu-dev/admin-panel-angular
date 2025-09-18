@@ -128,8 +128,12 @@ export class UsersTable implements OnInit, AfterViewInit {
   }
 
   deleteUser(userId: number) {
-    const context = this.userManagementService.createContext(this);
-    this.userManagementService.deleteUser(userId, context);
+    const confirmation = confirm('Are you sure you want to delete the user?');
+
+    if (confirmation) {
+      const context = this.userManagementService.createContext(this);
+      this.userManagementService.deleteUser(userId, context);
+    }
   }
 
   onEditClick(user: User) {
