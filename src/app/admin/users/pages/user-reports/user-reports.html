@@ -1,0 +1,71 @@
+<div class="reports-container">
+  <h2>Reports</h2>
+  
+  <div class="date-section">
+    <div class="date-inputs">
+      <div class="input-group">
+        <label for="startDate">Start date</label>
+        <input 
+          id="startDate"
+          type="date" 
+          [(ngModel)]="startDate" 
+          [max]="endDate || ''"
+          required>
+      </div>
+      
+      <div class="input-group">
+        <label for="endDate">End date</label>
+        <input 
+          id="endDate"
+          type="date" 
+          [(ngModel)]="endDate" 
+          [min]="startDate || ''"
+          required>
+      </div>
+      
+      <button 
+        class="btn-generate" 
+        (click)="generateReport()" 
+        [disabled]="isLoading || !startDate || !endDate">
+        {{ isLoading ? 'Loading...' : 'Generate report' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showTable" class="table-section">
+    <div *ngIf="reportData.length > 0" class="report-table">
+      <div class="table-header">
+        <h3>Report results ({{ reportData.length }} Records)</h3>
+        <button 
+          class="btn-export" 
+          (click)="exportReport()"
+          [disabled]="isExporting">
+          {{ isExporting ? 'Exporting...' : 'Export' }}
+        </button>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nume</th>
+            <th>Prenume</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of reportData">
+            <td>{{ user.email }}</td>
+            <td>{{ user.nume }}</td>
+            <td>{{ user.prenume }}</td>
+            <td>{{ user.data }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div *ngIf="reportData.length === 0" class="no-data">
+      <p>There is no data for the selected period.</p>
+    </div>
+  </div>
+</div>

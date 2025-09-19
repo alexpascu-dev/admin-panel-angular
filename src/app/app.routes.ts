@@ -47,6 +47,15 @@ export const routes: Routes = [
         data: { roles: ['ADMIN'] }
       },
       {
+        path: 'users/reports',
+        loadComponent: () =>
+          import('./admin/users/pages/user-reports/user-reports')
+        .then(m => m.UserReports),
+        canMatch: [roleCanMatch],
+        canActivate: [roleCanActivate],
+        data: { roles: ['SUPERVISOR', 'ADMIN'] }
+      },            
+      {
         path: 'users/barcode',
         loadComponent: () =>
           import('./admin/users/pages/barcode-generator/barcode-generator')

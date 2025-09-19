@@ -72,4 +72,29 @@ export class DashboardDataService {
     const url = `${apiUrl}/users/${userId}`;
     return this.http.delete(url);
   }
+
+
+
+  // GET USERS REPORT PREVIEW
+getReportPreview(startDate: string, endDate: string): Observable<any[]> {
+  const url = `${apiUrl}/users/report-preview`;
+  let params = new HttpParams()
+    .set('startDate', startDate)
+    .set('endDate', endDate);
+  
+  return this.http.get<any[]>(url, { params });
+}
+
+// EXPORT USERS REPORT
+exportReport(startDate: string, endDate: string): Observable<Blob> {
+  const url = `${apiUrl}/users/export-report`;
+  let params = new HttpParams()
+    .set('startDate', startDate)
+    .set('endDate', endDate);
+  
+  return this.http.get(url, { 
+    params,
+    responseType: 'blob' 
+  });
+}
 }

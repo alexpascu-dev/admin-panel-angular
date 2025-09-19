@@ -126,6 +126,19 @@
     <mat-divider></mat-divider>    
   }
 
+    <!-- User reports btn -->
+    <button
+      mat-button
+      class="menu-button"
+      routerLink="/admin/users/reports"
+      routerLinkActive="is-active"
+    >
+      <mat-icon>file_copy</mat-icon>
+      <span class="item" *ngIf="sidenavExpanded">User Reports</span>
+    </button>
+
+    <mat-divider></mat-divider>       
+
     <!-- Barcode generator btn -->
     <button
       mat-button
@@ -137,7 +150,7 @@
       <span class="item" *ngIf="sidenavExpanded">Barcode Generator</span>
     </button>
 
-    <mat-divider></mat-divider>    
+    <mat-divider></mat-divider>   
 
     <!-- Logout button -->
     <button mat-button class="menu-button logout-button" (click)="Logout()">

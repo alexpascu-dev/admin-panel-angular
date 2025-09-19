@@ -8,7 +8,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../models/user.interface';
+import { User } from '../../../../models/user.interface';
 import { FormsModule, NgForm } from '@angular/forms';
 import { inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,10 +20,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { UserFormData } from '../../../models/userform.interface';
-import { Auth } from '../../auth/auth';
-import { Roles } from '../../constants/constants';
-import { UserManagementService } from './services/user-management-service';
+import { UserFormData } from '../../../../models/userform.interface';
+import { Auth } from '../../../auth/auth';
+import { Roles } from '../../../constants/constants';
+import { UserManagementService } from '../services/user-management-service';
 
 @Component({
   standalone: true,
